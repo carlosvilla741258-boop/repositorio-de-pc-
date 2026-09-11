@@ -3,7 +3,7 @@ const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-requir
 for (const [w,rm] of [[1440,'no-preference'],[1280,'no-preference'],[768,'no-preference'],
                       [390,'no-preference'],[360,'no-preference'],[390,'reduce']]){
   const p = await b.newPage({viewport:{width:w,height:820}, reducedMotion:rm});
-  await p.goto('file:///tmp/claude-0/scratch/final/landing.html',{waitUntil:'load'});
+  await p.goto('http://127.0.0.1:8732/landing.html',{waitUntil:'load'});
   await p.waitForTimeout(1400);
   const r = await p.evaluate(()=>{const d=document.documentElement;
     return {exceso:d.scrollWidth-d.clientWidth, estatico:d.classList.contains('estatico'),
@@ -14,7 +14,7 @@ for (const [w,rm] of [[1440,'no-preference'],[1280,'no-preference'],[768,'no-pre
 }
 // móvil: ¿se reproduce solo también ahí?
 const m = await b.newPage({viewport:{width:390,height:844}});
-await m.goto('file:///tmp/claude-0/scratch/final/landing.html',{waitUntil:'load'});
+await m.goto('http://127.0.0.1:8732/landing.html',{waitUntil:'load'});
 await m.waitForTimeout(1000);
 const a = await m.evaluate(()=>document.getElementById('v').currentTime);
 await m.waitForTimeout(2200);

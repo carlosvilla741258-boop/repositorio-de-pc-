@@ -110,6 +110,7 @@ function irA(i){
   tarjeta(i);
   if (!listo || reduce) return;
   try { v.currentTime = CAPS[i].t0 + 0.02; } catch(e){}
+  if (CAPS[i].t0 > 0) compruebaSalto(CAPS[i].t0);
   const intento = v.play();
   if (intento && intento.catch) intento.catch(function(){
     /* El navegador no deja reproducir todavía: al menos se muestra el
@@ -119,6 +120,20 @@ function irA(i){
     pista.textContent = "Toca para reproducir";
     pista.style.opacity = 1;
   });
+}
+
+/* Un servidor que no sirve trozos del archivo (peticiones Range) deja al
+   navegador sin poder saltar: el video seguiría de corrido y cada título
+   quedaría sobre la escena equivocada. Antes que enseñar información que no
+   corresponde, se pasa a los capítulos escritos. Se comprueba una sola vez,
+   en el primer salto de verdad. */
+let saltoVisto = false;
+function compruebaSalto(destino){
+  if (saltoVisto) return;
+  saltoVisto = true;
+  setTimeout(function(){
+    if (Math.abs(v.currentTime - destino) > 2.5) sinVideo("El video no pudo cargarse");
+  }, 1500);
 }
 
 /* Detenerse justo al acabar la acción.
@@ -165,15 +180,43 @@ function aEstatico(){
 
 function metadatos(){
   listo = (v.duration || 0) > 0;
-  if (listo && !reduce) irA(0);
+  /* Con el video en un archivo aparte los metadatos llegan DESPUÉS de que el
+     scroll haya fijado el tramo, así que `irA` lo daría por hecho y no
+     arrancaría nada. Se vuelve a entrar al tramo actual a la fuerza. */
+  if (listo && !reduce){ const i = cap < 0 ? 0 : cap; cap = -1; irA(i); }
 }
 v.addEventListener("loadedmetadata", metadatos);
-/* Con el video incrustado los metadatos pueden estar listos ANTES de que
-   corra este script: el evento no llegaría nunca. Se comprueba a mano. */
+/* Los metadatos pueden estar listos ANTES de que corra este script (video en
+   caché): el evento no llegaría nunca. Se comprueba a mano. */
 if (v.readyState >= 1) metadatos();
-v.addEventListener("error", function(){
+
+/* Si el video no carga, la página no se queda en negro: enseña los capítulos
+   escritos. `error` cubre el fallo declarado (formato no soportado, archivo
+   que no llega); el plazo cubre el que se queda colgado sin decir nada. */
+let caido = false;
+function sinVideo(aviso){
+  /* Sin `listo` en la condición a propósito: el video puede haber cargado
+     perfectamente y aun así no servir, si el servidor no deja saltar. */
+  if (caido) return;
+  caido = true;
   aEstatico();
-  pista.textContent = "El video no pudo cargarse";
+  pista.textContent = aviso;
+}
+v.addEventListener("error", function(){ sinVideo("El video no pudo cargarse"); });
+/* No basta con escuchar: si ninguna fuente sirve, Chrome deja networkState en
+   3 (NETWORK_NO_SOURCE) sin disparar `error` en el elemento, y encima puede
+   haberlo hecho antes de que corriera este script. Se comprueba el estado. */
+function revisar(){
+  if (listo || caido) return;
+  if (v.networkState === 3) sinVideo("El video no pudo cargarse");
+}
+revisar();
+[1500, 5000, 20000].forEach(function(ms){
+  setTimeout(function(){
+    revisar();
+    /* A los 20 s sin un solo byte, tampoco va a llegar. */
+    if (ms === 20000 && !listo && v.readyState === 0) sinVideo("El video no pudo cargarse");
+  }, ms);
 });
 
 tarjeta(0);
