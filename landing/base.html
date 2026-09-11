@@ -1,0 +1,374 @@
+<title>Abarca Factoría</title>
+<meta name="description" content="Planchado, pintura, pulido, cerámico y pintado de aros en San Juan de Lurigancho, Lima. Mira en video lo que le hacemos a tu carro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────────
+   Abarca Factoría. El video no se reproduce solo: el scroll lo mueve
+   fotograma a fotograma, y las tarjetas de servicio caen en el tramo
+   exacto de metraje que les corresponde.
+   Rojo #c80018 muestreado de la web anterior del taller.
+   ───────────────────────────────────────────────────────────────── */
+:root{
+  --ground:#0c0c0e; --surface:#151518; --surface-2:#1d1d21;
+  --line:#2c2c32; --ink:#eceae7; --muted:#9a9793;
+  --red:#c80018; --red-lit:#ff2d40;
+  --display:"Oswald",Impact,sans-serif;
+  --text:"Archivo",system-ui,-apple-system,sans-serif;
+  --s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;--s6:64px;--s7:96px;--s8:140px;
+  --gut:clamp(20px,5vw,64px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+[id]{scroll-margin-top:88px}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--text);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:var(--gut)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+h1,h2,h3,.num{font-family:var(--display);font-weight:700;line-height:1;margin:0;
+  text-transform:uppercase;letter-spacing:.005em}
+h2{font-size:clamp(28px,4.4vw,54px)}
+h3{font-size:clamp(17px,2vw,22px);letter-spacing:.02em}
+p{margin:0 0 var(--s3);text-wrap:pretty}
+.lead{font-size:clamp(16px,1.6vw,19px);color:var(--muted);max-width:56ch}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red-lit);display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s4)}
+.eyebrow::before{content:"";width:34px;height:2px;background:var(--red);flex:none}
+.tnum{font-variant-numeric:tabular-nums}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--red);z-index:60}
+header{position:sticky;top:0;z-index:50;background:rgba(12,12,14,.9);border-bottom:1px solid var(--line)}
+.bar{display:flex;justify-content:space-between;align-items:center;padding-block:var(--s3);gap:var(--s4)}
+.brand{font-family:var(--display);font-size:19px;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand b{color:var(--red-lit)}
+nav{display:flex;gap:var(--s4);flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
+  letter-spacing:.09em;text-transform:uppercase;transition:color 130ms ease}
+nav a:hover,nav a:focus-visible{color:var(--ink)}
+@media(max-width:900px){nav{display:none}}
+/* A 360 px la marca y el botón no caben juntos: se compacta el botón. */
+@media(max-width:430px){
+  .brand{font-size:16px}
+  header .btn{padding:10px 14px;font-size:12px;letter-spacing:.06em}
+  .bar{gap:var(--s3)}
+}
+.btn{display:inline-block;font-family:var(--display);font-size:15px;letter-spacing:.08em;
+  text-transform:uppercase;text-decoration:none;padding:16px 24px;border:2px solid var(--red);
+  background:var(--red);color:#fff;transition:background 130ms ease,color 130ms ease}
+.btn:hover,.btn:focus-visible{background:transparent;color:var(--red-lit)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover,.btn.ghost:focus-visible{border-color:var(--ink)}
+:focus-visible{outline:2px solid var(--red-lit);outline-offset:3px}
+
+/* ── el escenario: el video manda y la información flota encima ── */
+.scrolly{position:relative;height:760vh}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#08080a}
+.marco{position:absolute;inset:0;padding-top:72px;display:grid;place-items:center}
+video{width:100%;height:100%;object-fit:contain;display:block;background:#08080a}
+.avance-pista{position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:rgba(255,255,255,.10);z-index:4}
+.avance-pista i{display:block;height:100%;width:0;background:var(--red);transition:width 120ms linear}
+/* Velo degradado, no un bloque opaco: se lee el texto y se sigue viendo el video. */
+.panel{position:absolute;left:0;right:0;bottom:0;z-index:3;pointer-events:none;
+  padding:var(--s7) var(--gut) clamp(28px,5vh,56px);
+  background:linear-gradient(to top,rgba(6,6,8,.94) 0%,rgba(6,6,8,.86) 32%,
+    rgba(6,6,8,.55) 66%,rgba(6,6,8,0) 100%)}
+.panel-in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+  gap:var(--s5);align-items:end;max-width:1180px;margin:0 auto;width:100%}
+.panel-in>div{min-width:0}
+.panel a,.panel button{pointer-events:auto}
+#cap-tit{font-family:var(--display);font-weight:700;text-transform:uppercase;line-height:.96;
+  font-size:clamp(28px,4vw,52px);margin:0;text-shadow:0 2px 24px rgba(0,0,0,.8)}
+.chapno{font-family:var(--display);font-size:13px;letter-spacing:.2em;color:var(--red-lit);
+  margin-bottom:var(--s2);text-transform:uppercase;text-shadow:0 1px 12px rgba(0,0,0,.9)}
+#cap-txt{text-shadow:0 1px 14px rgba(0,0,0,.9)}
+.tarifas{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);margin-top:var(--s3);
+  padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.16)}
+.tarifa{font-size:13px;color:#c4c0b9;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+.tarifa b{display:block;font-family:var(--display);font-size:17px;color:var(--red-lit);
+  font-weight:700;letter-spacing:.02em}
+.panel .cta{display:flex;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s4);
+  padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.16)}
+.pista{position:absolute;left:50%;top:88px;transform:translateX(-50%);font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;color:#b7b2aa;pointer-events:none;z-index:4;
+  text-shadow:0 1px 10px rgba(0,0,0,.9);transition:opacity 300ms ease}
+.marcador{position:absolute;right:var(--gut);top:50%;transform:translateY(-50%);
+  display:grid;gap:12px;z-index:4}
+@media(max-width:900px){.marcador{display:none}}
+.marcador i{display:block;width:2px;height:24px;background:rgba(255,255,255,.22);
+  transition:background 200ms ease}
+.marcador i.on{background:var(--red)}
+@media(max-width:900px){
+  /* El video sube para que el velo no se le coma encima. */
+  .marco{padding-bottom:42vh}
+  .panel{padding-top:var(--s6)}
+  .panel-in{grid-template-columns:1fr;gap:var(--s3);align-items:start}
+}
+
+/* ── secciones ────────────────────────────────────────────────── */
+section{padding-block:var(--s8)}
+.rule{height:1px;background:var(--line);transform-origin:left center;margin-bottom:var(--s6)}
+.two{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,6vw,96px);align-items:start}
+@media(max-width:860px){.two{grid-template-columns:1fr}}
+.figures{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line)}
+@media(max-width:640px){.figures{grid-template-columns:1fr}}
+.fig{padding:var(--s6) var(--s4);border-right:1px solid var(--line)}
+.fig:last-child{border-right:0}
+@media(max-width:640px){.fig{border-right:0;border-bottom:1px solid var(--line);padding-block:var(--s5)}
+  .fig:last-child{border-bottom:0}}
+.num{font-size:clamp(48px,8vw,80px);color:var(--red-lit);line-height:.9}
+.fig p{margin:var(--s2) 0 0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.tabs{display:flex;gap:var(--s1);margin-bottom:var(--s5);flex-wrap:wrap}
+.tab{font-family:var(--display);font-size:15px;letter-spacing:.1em;text-transform:uppercase;
+  padding:12px 20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  cursor:pointer;transition:background 130ms ease,border-color 130ms ease,color 130ms ease}
+.tab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);align-items:start}
+@media(max-width:860px){.tiers{grid-template-columns:1fr}}
+.tier{background:var(--surface);border:1px solid var(--line);padding:var(--s5) var(--s4)}
+.tier.featured{border-color:var(--red);background:var(--surface-2)}
+.tier .desc{font-size:15px;color:var(--muted);margin-block:var(--s2) var(--s4)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);
+  padding-block:var(--s3);border-top:1px solid var(--line)}
+.row .k{font-weight:600;font-size:15px}
+.row .k small{display:block;font-weight:400;font-size:13px;color:var(--muted);text-transform:none}
+.row .v{font-family:var(--display);font-size:19px;color:var(--red-lit);white-space:nowrap}
+.note{font-size:13px;color:var(--muted);margin-top:var(--s4)}
+.lead-service{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--red);
+  padding:var(--s5);display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:center}
+@media(max-width:700px){.lead-service{grid-template-columns:1fr}}
+.lead-service .v{font-family:var(--display);font-size:clamp(32px,5vw,52px);color:var(--red-lit)}
+.svc-row{display:grid;grid-template-columns:1fr auto;gap:var(--s4);padding-block:var(--s4);
+  border-bottom:1px solid var(--line);align-items:baseline}
+.svc-row .v{font-family:var(--display);font-size:17px;color:var(--red-lit);white-space:nowrap}
+.svc-row p{margin:var(--s1) 0 0;font-size:15px;color:var(--muted);max-width:52ch}
+.ba{position:relative;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--line);
+  overflow:hidden;touch-action:pan-y;cursor:ew-resize;--pos:50%}
+.ba svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ba .before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba .divider{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:var(--red);
+  transform:translateX(-1px);pointer-events:none}
+.ba .knob{position:absolute;top:50%;left:var(--pos);width:38px;height:38px;background:var(--red);
+  border-radius:50%;transform:translate(-50%,-50%);display:grid;place-items:center;color:#fff;
+  font-size:13px;pointer-events:none}
+.ba .tag{position:absolute;top:var(--s3);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  background:rgba(12,12,14,.82);padding:4px 8px;color:var(--ink);pointer-events:none}
+.ba .tag.l{left:var(--s3)} .ba .tag.r{right:var(--s3)}
+.ba-hint{font-size:13px;color:var(--muted);margin-top:var(--s3)}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+@media(max-width:760px){.gallery{grid-template-columns:1fr}}
+.placeholder-note{border:1px dashed var(--line);padding:var(--s4);font-size:13px;
+  color:var(--muted);margin-top:var(--s5)}
+.placeholder-note code{color:var(--red-lit);font-family:ui-monospace,monospace;font-size:13px}
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,6vw,80px)}
+@media(max-width:860px){.contact{grid-template-columns:1fr}}
+.cline{display:grid;grid-template-columns:20ch 1fr;gap:var(--s4);padding-block:var(--s4);
+  border-top:1px solid var(--line);align-items:baseline}
+@media(max-width:520px){.cline{grid-template-columns:1fr;gap:var(--s1)}}
+.cline dt{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.cline dd{margin:0;font-size:17px}
+.cline a{color:var(--ink);text-decoration-color:var(--red);text-underline-offset:4px}
+.cline a:hover{color:var(--red-lit)}
+dl{margin:0}
+footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
+  justify-content:space-between;gap:var(--s4);flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.wa{position:fixed;right:20px;bottom:20px;z-index:55;width:54px;height:54px;background:#1faa54;
+  display:grid;place-items:center;border-radius:50%;color:#fff;text-decoration:none;
+  transition:background 130ms ease}
+.wa:hover{background:#178f45}
+/* Sin video o con "reducir movimiento": el escenario deja de ser pegajoso
+   y los capítulos se leen como lista, con el póster arriba. */
+.estatico .scrolly{height:auto}
+.estatico .stage{position:static;height:auto;overflow:visible}
+.estatico .marco{position:static;padding:0}
+.estatico .panel{position:static;background:none;padding-inline:var(--gut)}
+.estatico .pista,.estatico .marcador{display:none}
+.capitulos{display:none}
+.estatico .capitulos{display:grid;gap:var(--s5);padding:var(--s6) var(--gut) var(--s7);
+  max-width:1180px;margin:0 auto}
+.cap-est{border-top:1px solid var(--line);padding-top:var(--s4)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<div id="progress"></div>
+<header><div class="wrap bar">
+  <a class="brand" href="#top">Abarca <b>Factoría</b></a>
+  <nav><a href="#proceso">El proceso</a><a href="#precios">Precios</a>
+    <a href="#trabajos">Trabajos</a><a href="#contacto">Contacto</a></nav>
+  <a class="btn" href="https://wa.me/51934965098" style="padding:12px 20px;font-size:13px">Presupuesto</a>
+</div></header>
+
+<main id="top">
+<h1 class="sr-only">Abarca Factoría — Planchado, pintura, pulido, cerámico y pintado de aros
+  en San Juan de Lurigancho, Lima</h1>
+
+<div class="scrolly" id="proceso">
+  <div class="stage">
+    <div class="marco">
+      <video id="v" preload="auto" muted playsinline poster="__POSTER__"
+             aria-label="Proceso de reparación de carrocería"><!--FUENTES--></video>
+    </div>
+      <div class="avance-pista" aria-hidden="true"><i id="avance"></i></div>
+      <div class="marcador" id="marcador" aria-hidden="true"></div>
+      <p class="pista" id="pista">Desplázate</p>
+    <div class="panel"><div class="panel-in">
+      <div><p class="chapno" id="cap-no"></p><h2 id="cap-tit"></h2></div>
+      <div><p class="lead" id="cap-txt"></p><div class="tarifas" id="cap-tar"></div></div>
+    </div></div>
+  </div>
+  <div class="capitulos" id="capitulos"></div>
+</div>
+
+<div class="wrap"><div class="figures">
+  <div class="fig"><div class="num tnum">5</div><p>Años de experiencia</p></div>
+  <div class="fig"><div class="num tnum">6</div><p>Servicios especializados</p></div>
+  <div class="fig"><div class="num tnum">6</div><p>Días de atención por semana</p></div>
+</div></div>
+
+<section class="wrap">
+  <div class="rule"></div>
+  <div class="two" style="margin-bottom:var(--s6)">
+    <div><p class="eyebrow">Los dos que rematan el trabajo</p>
+      <h2>Cerámico<br>y aros</h2></div>
+    <p class="lead">Van al final del proceso. El cerámico sella la pintura recién pulida
+      y elige cuántos años dura; los aros se desmontan y se pintan aparte para que el
+      acabado quede parejo.</p>
+  </div>
+  <div class="svc-row">
+    <div><h3>Tratamiento cerámico</h3>
+      <p>Sella la pintura y la protege del sol, la lluvia y el polvo. Eliges cuántos años dura.</p></div>
+    <div class="v">S/ 400 – 3500</div>
+  </div>
+  <div class="svc-row">
+    <div><h3>Remodelación y pintado de aros</h3>
+      <p>Renovamos el aspecto de tus aros como si fueran nuevos, sin cambiarlos.</p></div>
+    <div class="v">Consultar</div>
+  </div>
+</section>
+
+<section id="precios" class="wrap" style="padding-top:0">
+  <div class="rule"></div>
+  <div class="two" style="margin-bottom:var(--s6)">
+    <div><p class="eyebrow">Precios referenciales</p>
+      <h2>Elige el nivel<br>de acabado</h2></div>
+    <p class="lead">Según tu presupuesto y necesidad. Los daños por choque se
+      presupuestan aparte, según su gravedad.</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Tipo de vehículo">
+    <button class="tab" role="tab" aria-selected="true" data-veh="auto">Auto</button>
+    <button class="tab" role="tab" aria-selected="false" data-veh="camioneta">Camioneta</button>
+    <button class="tab" role="tab" aria-selected="false" data-veh="minivan">Minivan</button>
+  </div>
+  <div class="tiers" id="tiers"></div>
+  <p class="note" id="veh-note"></p>
+</section>
+
+<section class="wrap" style="padding-top:0">
+  <div class="rule"></div>
+  <p class="eyebrow">Otros servicios</p>
+  <div class="lead-service">
+    <div><h3>Planchado y enderezado</h3>
+      <p style="margin:var(--s2) 0 0;color:var(--muted);font-size:15px;max-width:48ch">
+        Reparación de abolladuras y corrección de estructura y chasis afectados por golpes.</p></div>
+    <div class="v tnum">S/ 80</div>
+  </div>
+  <div class="svc-row">
+    <div><h3>Reparación por choque</h3>
+      <p>Presupuesto costeable, adaptado a la gravedad del choque.</p></div>
+    <div class="v">A evaluar · según daño</div>
+  </div>
+</section>
+
+<section id="trabajos" class="wrap" style="padding-top:0">
+  <div class="rule"></div>
+  <div class="two" style="margin-bottom:var(--s6)">
+    <div><p class="eyebrow">Galería</p><h2>Nuestros trabajos</h2></div>
+    <p class="lead">Arrastra el control para comparar el antes y el después.</p>
+  </div>
+  <div class="gallery">
+    <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
+        aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+      <svg viewBox="0 0 320 200" class="after" aria-hidden="true">
+        <rect width="320" height="200" fill="#1a1013"/>
+        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="#c80018"/>
+        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="none" stroke="#ff5566" stroke-width="2"/>
+        <path d="M128 82h56v22h-64z" fill="#0c0c0e"/><path d="M196 84l30 20h-30z" fill="#0c0c0e"/>
+        <circle cx="102" cy="140" r="20" fill="#0c0c0e" stroke="#d8d8de" stroke-width="3"/>
+        <circle cx="228" cy="140" r="20" fill="#0c0c0e" stroke="#d8d8de" stroke-width="3"/></svg>
+      <svg viewBox="0 0 320 200" class="before" aria-hidden="true">
+        <rect width="320" height="200" fill="#242428"/>
+        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="#4a4a52"/>
+        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="none" stroke="#6a6a74" stroke-width="2"/>
+        <path d="M128 82h56v22h-64z" fill="#2e2e34"/><path d="M196 84l30 20h-30z" fill="#2e2e34"/>
+        <circle cx="102" cy="140" r="20" fill="#17171a" stroke="#55555e" stroke-width="3"/>
+        <circle cx="228" cy="140" r="20" fill="#17171a" stroke="#55555e" stroke-width="3"/>
+        <g stroke="#7a7a86" stroke-width="1.4" opacity=".85"><path d="M150 96l14 12M168 92l10 16M136 104l16 8"/></g></svg>
+      <span class="tag l">Antes</span><span class="tag r">Después</span>
+      <div class="divider"></div><div class="knob">◂▸</div></div>
+      <p class="ba-hint">Ejemplo de demostración — sustituir por fotos reales del taller.</p></div>
+    <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
+        aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+      <svg viewBox="0 0 320 200" class="after" aria-hidden="true">
+        <rect width="320" height="200" fill="#141418"/>
+        <circle cx="160" cy="100" r="62" fill="#1c1c22" stroke="#c80018" stroke-width="5"/>
+        <circle cx="160" cy="100" r="26" fill="#c80018"/>
+        <g stroke="#e4e4ea" stroke-width="5"><path d="M160 42v22M160 136v22M98 100h22M200 100h22"/>
+        <path d="M116 56l16 16M204 128l16 16M204 72l16-16M116 144l16-16"/></g></svg>
+      <svg viewBox="0 0 320 200" class="before" aria-hidden="true">
+        <rect width="320" height="200" fill="#242428"/>
+        <circle cx="160" cy="100" r="62" fill="#3a3a42" stroke="#5e5e68" stroke-width="4"/>
+        <circle cx="160" cy="100" r="26" fill="#2a2a30"/>
+        <g stroke="#5e5e68" stroke-width="5"><path d="M160 42v22M160 136v22M98 100h22M200 100h22"/>
+        <path d="M116 56l16 16M204 128l16 16M204 72l16-16M116 144l16-16"/></g>
+        <g stroke="#8a8a96" stroke-width="2" opacity=".9"><path d="M120 128l-10 12M212 74l12-10"/></g></svg>
+      <span class="tag l">Antes</span><span class="tag r">Después</span>
+      <div class="divider"></div><div class="knob">◂▸</div></div>
+      <p class="ba-hint">Ejemplo de demostración — sustituir por fotos reales del taller.</p></div>
+  </div>
+  <p class="placeholder-note">Para poner tus fotos: reemplaza cada
+    <code>&lt;svg class="before"&gt;</code> y <code>&lt;svg class="after"&gt;</code> por
+    <code>&lt;img class="before" src="assets/antes.jpg" alt=""&gt;</code> y
+    <code>&lt;img class="after" src="assets/despues.jpg" alt=""&gt;</code>.</p>
+</section>
+
+<section id="contacto" class="wrap" style="padding-top:0">
+  <div class="rule"></div>
+  <div class="two" style="margin-bottom:var(--s6)">
+    <div><p class="eyebrow">Contacto</p><h2>Escríbenos<br>o visítanos</h2></div>
+    <p class="lead">Atendemos de lunes a sábado. Para un presupuesto rápido,
+      mándanos una foto del daño por WhatsApp.</p>
+  </div>
+  <div class="contact">
+    <dl>
+      <div class="cline"><dt>WhatsApp / Teléfono</dt>
+        <dd><a href="https://wa.me/51934965098" class="tnum">934 965 098</a></dd></div>
+      <div class="cline"><dt>Email</dt>
+        <dd><a href="mailto:factoryabarca@gmail.com">factoryabarca@gmail.com</a></dd></div>
+      <div class="cline"><dt>Dirección</dt>
+        <dd>Av. Sta. Rosa de Lima 752<br>San Juan de Lurigancho 15434</dd></div>
+    </dl>
+    <dl>
+      <div class="cline"><dt>Horario</dt>
+        <dd>Lunes a viernes · 8:00 – 18:00<br>Sábados · 8:00 – 14:00<br>
+          <span style="color:var(--muted)">Domingos · cerrado</span></dd></div>
+      <div class="cline"><dt>RUC</dt><dd class="tnum">20612357421</dd></div>
+      <div class="cline"><dt>Redes</dt>
+        <dd>Facebook · Abarca Factoría<br>Instagram · abarca factoria</dd></div>
+    </dl>
+  </div>
+</section>
+</main>
+
+<div class="wrap"><footer>
+  <span>Abarca Factoría · Planchado, pintura y pulido</span>
+  <span>© 2026 · San Juan de Lurigancho, Lima</span>
+</footer></div>
+
+<a class="wa" href="https://wa.me/51934965098" aria-label="Escribir por WhatsApp">
+  <svg width="27" height="27" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2m0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2"/>
+  </svg>
+</a>
+<!--JS-->

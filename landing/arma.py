@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+"""Arma landing.html: base.html + app.js + video incrustado en data URI."""
+import base64, os
+def uri(f, mime):
+    with open(f,"rb") as fh: return "data:%s;base64,%s"%(mime, base64.b64encode(fh.read()).decode())
+
+html = open("base.html", encoding="utf-8").read()
+app  = open("app.js",    encoding="utf-8").read()
+
+fuentes = ('<source src="%s" type="video/webm">'
+           '<source src="%s" type="video/mp4">') % (uri("g960.webm","video/webm"),
+                                                    uri("g960.mp4","video/mp4"))
+html = html.replace("__POSTER__", uri("g960.jpg","image/jpeg"))
+html = html.replace("<!--FUENTES-->", fuentes)
+html = html.replace("<!--JS-->", app)
+open("landing.html","w",encoding="utf-8").write(html)
+print("landing.html  %.2f MB" % (os.path.getsize("landing.html")/1048576))
