@@ -144,13 +144,6 @@ section{padding-block:var(--s8)}
   border-bottom:1px solid var(--line);align-items:baseline}
 .svc-row .v{font-family:var(--display);font-size:17px;color:var(--red-lit);white-space:nowrap}
 .svc-row p{margin:var(--s1) 0 0;font-size:15px;color:var(--muted);max-width:52ch}
-/* Va DESPUÉS de las reglas de arriba: una media query no suma especificidad,
-   así que si se declara antes, la regla base la pisa. En 360 px "A evaluar ·
-   según daño" no cabe en una línea y empujaba la página a lo ancho. */
-@media(max-width:430px){
-  .svc-row{grid-template-columns:1fr;gap:var(--s2)}
-  .svc-row .v{white-space:normal}
-}
 .ba{position:relative;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--line);
   overflow:hidden;touch-action:pan-y;cursor:ew-resize;--pos:50%}
 .ba svg{position:absolute;inset:0;width:100%;height:100%;display:block}
