@@ -1,7 +1,7 @@
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
 const p = await b.newPage({viewport:{width:1440,height:900}});
-const FIN = [7.98, 12.065, 20.315, 28.565, 36.815, 45.065];
+const FIN = [7.98, 16.23, 24.48, 32.73, 40.98, 49.23];
 const errs=[]; p.on('pageerror',e=>errs.push('JS: '+e.message));
 await p.goto('file:///tmp/claude-0/scratch/final/landing.html',{waitUntil:'load'});
 await p.waitForTimeout(1500);
