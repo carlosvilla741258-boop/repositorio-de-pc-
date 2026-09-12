@@ -8,8 +8,12 @@
 /* Tiempos MEDIDOS del propio archivo con detección de negros, no calculados:
    el filtro fps=24 deja los clips en 8,042 s y no en 8,096, y ese desfase
    acumulado metía la congelación dentro del negro. */
-const T0  = [0,    8.292, 16.542, 24.792, 33.042, 41.292];  // arranque de cada tramo
-const FIN = [7.98, 16.23, 24.48,  32.73,  40.98,  49.23];   // último fotograma con imagen
+/* El tramo 2 dura menos que los demás a propósito: el clip sigue abriendo el
+   carro hasta dejar el motor a la vista, y eso haría pensar que hacemos
+   mecánica. Se corta en el fotograma 92, con las piezas de carrocería ya
+   separadas y el frontal todavía cerrado. */
+const T0  = [0,    8.292,  12.375, 20.625, 28.875, 37.125];  // arranque de cada tramo
+const FIN = [7.98, 12.065, 20.315, 28.565, 36.815, 45.065];  // último fotograma con imagen
 const CAPS = [
  { no:"Abarca Factoría", t:"Detalle y precisión\nen cada reparación",
    txt:"Cinco años devolviendo a los vehículos su aspecto original en San Juan de "+

@@ -1,6 +1,7 @@
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
 const p = await b.newPage({viewport:{width:1440,height:900}});
+const FIN = [7.98, 12.065, 20.315, 28.565, 36.815, 45.065];
 const errs=[]; p.on('pageerror',e=>errs.push('JS: '+e.message));
 await p.goto('file:///tmp/claude-0/scratch/final/landing.html',{waitUntil:'load'});
 await p.waitForTimeout(1500);
@@ -23,7 +24,7 @@ for (let i=1;i<6;i++){
   await p.waitForTimeout(9400);
   const c = await p.evaluate(()=>({t:+v.currentTime.toFixed(3), pausado:v.paused}));
   filas.push({tramo:i+1, no:a.no, tarjeta:a.car, entra:a.t, alFinal:c.t,
-    pausado:c.pausado, completo:(c.t-a.t)>7.5?'sí':'NO'});
+    pausado:c.pausado, completo:(Math.abs(c.t-FIN[i])<0.1 && c.pausado)?'sí':'NO'});
   await p.screenshot({path:'s'+(i+1)+'.png'});
 }
 console.table(filas);
