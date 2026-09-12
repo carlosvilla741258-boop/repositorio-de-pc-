@@ -190,41 +190,39 @@ section{padding-block:var(--s8)}
   padding:12px 20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
   cursor:pointer;transition:background 130ms ease,border-color 130ms ease,color 130ms ease}
 .tab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
-/* Antes eran tres tarjetas sueltas: para comparar pintura entre niveles
-   había que leer tres bloques distintos. Ahora es una tabla — servicio por
-   fila, nivel por columna — y elegir un nivel enciende su columna. */
-.niveles{display:flex;max-width:44rem;border:1px solid var(--line);margin-bottom:var(--s4)}
-.niveles button{flex:1;font-family:var(--display);font-size:14px;letter-spacing:.1em;
-  text-transform:uppercase;padding:14px var(--s3);background:none;border:0;
-  border-right:1px solid var(--line);color:var(--muted);cursor:pointer;
-  box-shadow:inset 0 0 0 0 var(--red);
-  transition:background 150ms ease,color 150ms ease,box-shadow 200ms ease}
-.niveles button:last-child{border-right:0}
-.niveles button:hover{color:var(--ink)}
-.niveles button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);
-  box-shadow:inset 0 -3px 0 0 var(--red)}
-.nivel-pie{color:var(--muted);font-size:15px;margin:0 0 var(--s5);min-height:1.5em}
-
-.tabla{width:100%;border-collapse:collapse}
-.tabla th,.tabla td{text-align:left;padding:var(--s4) var(--s3);vertical-align:top;
-  border-bottom:1px solid var(--line);transition:background 150ms ease}
-.tabla thead th{font-family:var(--display);font-weight:400;text-transform:uppercase;
-  letter-spacing:.12em;font-size:12px;color:var(--muted);padding-block:var(--s3)}
-.tabla tbody th{font-weight:600;font-size:16px;white-space:nowrap;width:1%}
-.tabla tbody tr:hover th{box-shadow:inset 3px 0 0 0 var(--red)}
-.tabla .det{display:block;font-size:13px;color:var(--muted)}
-.tabla .pr{font-family:var(--display);font-size:19px;color:#8b8782;white-space:nowrap;
-  transition:color 150ms ease}
-.tabla .par+.par{margin-top:var(--s3)}
-.tabla .sel{background:var(--surface-2)}
-.tabla thead th.sel{color:var(--ink)}
-.tabla td.sel .pr{color:var(--red-lit)}
-@media(max-width:760px){
-  /* En el celular sólo se enseña el nivel elegido: cuatro columnas no caben
-     y la tabla queda en servicio y precio. */
-  .tabla :is(th,td):not(.sel):not(:first-child){display:none}
-  .tabla th,.tabla td{padding-inline:0}
-}
+/* Columnas otra vez, pero no tres cajas iguales: la del medio es la más
+   elegida y va más ancha y encendida de salida. Elegir otra le pasa el foco,
+   sin apagar las demás — la gracia de las columnas es poder comparar. */
+.planes{display:grid;grid-template-columns:1fr 1.14fr 1fr;gap:var(--s3);align-items:stretch}
+@media(max-width:860px){.planes{grid-template-columns:1fr}}
+.plan{display:flex;flex-direction:column;text-align:left;width:100%;
+  background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--line);
+  padding:var(--s5) var(--s4);cursor:pointer;font:inherit;color:inherit;
+  transition:background 180ms ease,border-color 180ms ease}
+.plan:hover{border-color:#3f3f47}
+.plan[aria-selected="true"]{background:var(--surface-2);border-color:#3f3f47;
+  border-top-color:var(--red)}
+.plan-cab{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3)}
+.plan h3{font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(19px,2vw,25px);line-height:1;margin:0}
+.plan .marca-tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red-lit);white-space:nowrap}
+.plan .desc{font-size:15px;color:var(--muted);margin:var(--s3) 0 var(--s4);
+  min-height:2.9em}
+@media(max-width:860px){.plan .desc{min-height:0}}
+.plan .row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);
+  padding-block:var(--s3);border-top:1px solid var(--line)}
+.plan .k{font-weight:600;font-size:15px}
+.plan .k small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.plan .v{font-family:var(--display);font-size:20px;color:#8e8a85;white-space:nowrap;
+  text-align:right;transition:color 180ms ease}
+.plan .v small{display:block;font-family:var(--text);font-size:12px;color:var(--muted)}
+.plan[aria-selected="true"] .v{color:var(--red-lit)}
+.plan .pedir{margin-top:auto;padding-top:var(--s5)}
+.plan .pedir .btn{display:block;text-align:center;padding:12px 16px;font-size:13px}
+.plan:not([aria-selected="true"]) .pedir .btn{background:transparent;color:var(--ink);
+  border-color:var(--line)}
+.plan:not([aria-selected="true"]) .pedir .btn:hover{border-color:var(--red);color:var(--red-lit)}
 .note{font-size:13px;color:var(--muted);margin-top:var(--s4)}
 .lead-service{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--red);
   padding:var(--s5);display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:center}
@@ -414,9 +412,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
     <button class="tab" role="tab" aria-selected="false" data-veh="camioneta">Camioneta</button>
     <button class="tab" role="tab" aria-selected="false" data-veh="minivan">Minivan</button>
   </div>
-  <div class="niveles" id="niveles" role="group" aria-label="Nivel de acabado"></div>
-  <p class="nivel-pie" id="nivel-pie"></p>
-  <div id="tabla-cont"></div>
+  <div class="planes" id="planes"></div>
   <p class="note" id="veh-note"></p>
 </section>
 

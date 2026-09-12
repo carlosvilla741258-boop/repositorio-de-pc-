@@ -86,12 +86,16 @@ página no enseña una imagen rota.
 
 ## El tablero de precios
 
-Eran tres tarjetas sueltas, una por nivel de acabado. Para comparar cuánto
-cuesta la pintura en cada nivel había que leer tres bloques distintos, y el
-linter lo marcaba como `three-cards`.
+Son columnas, una por nivel de acabado, **pero no tres cajas iguales** — eso es
+lo que lo hacía plano. La del medio es la más elegida: va más ancha (1,14fr
+contra 1fr), lleva su distintivo y arranca encendida. Tocar otra le pasa el
+foco: se enciende su filete rojo, sus precios pasan a rojo y su botón se
+rellena, mientras las otras dos quedan apagadas **pero legibles** — la gracia
+de las columnas es comparar, y esconder las demás la anula.
 
-Ahora es una tabla: **el servicio manda la fila y el nivel la columna**, que es
-como de verdad se comparan. Elegir un nivel enciende su columna y apaga —sin
-esconder— las otras dos, así que puedes leer la tuya de corrido sin perder la
-comparación. En el celular no caben cuatro columnas, así que se enseña sólo la
-elegida y la tabla queda en servicio y precio.
+Las tres descripciones reservan dos líneas (`min-height:2.9em`). Sin eso, una
+descripción de una línea y otra de dos descuadran las filas de precio entre
+columnas y se pierde la comparación de un vistazo.
+
+El botón de cada columna abre WhatsApp con el mensaje ya escrito, nombrando el
+nivel y el tipo de vehículo elegidos.

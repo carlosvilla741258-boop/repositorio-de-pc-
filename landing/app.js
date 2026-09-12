@@ -13,7 +13,7 @@ const FIN = [7.98, 16.23, 24.48,  32.73,  40.98,  49.23];   // último fotograma
 const CAPS = [
  { no:"Abarca Factoría", t:"Detalle y precisión\nen cada reparación",
    txt:"Cinco años devolviendo a los vehículos su aspecto original en San Juan de "+
-       "Lurigancho. Desplázate para recorrer el proceso.", cta:true },
+       "Lurigancho. Usa las flechas para recorrer el proceso.", cta:true },
  { no:"01 / 05", t:"Qué reparamos",
    txt:"Capó, techo, puertas, aletas, tapa de maletero y parachoques. Toda la "+
        "carrocería exterior, pieza por pieza.",
@@ -44,7 +44,7 @@ const PRECIOS = {
  auto:{
   niveles:[
    {nom:"Básica",  pie:"Cuidado esencial para mantener el carro en buen estado."},
-   {nom:"Media",   pie:"El equilibrio entre acabado y precio."},
+   {nom:"Media",   pie:"El equilibrio entre acabado y precio.", tag:"Más elegido"},
    {nom:"Premium", pie:"El acabado más fino, como recién salido de fábrica."}],
   filas:[
    {svc:"Pintura",  celdas:[[["Colores planos","S/ 200 – 400"]],
@@ -66,55 +66,51 @@ const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 const clamp = (v,a,b) => v<a?a:(v>b?b:v);
 
 /* ── Precios ── */
-const selNiv = $("#niveles"), pieNiv = $("#nivel-pie"),
-      contTabla = $("#tabla-cont"), noteEl = $("#veh-note");
-let nivel = 1;                       // arranca en el del medio
-
-function marcaColumna(){
-  $$("#tabla-cont .tabla tr").forEach(function(tr){
-    const cs = Array.prototype.slice.call(tr.children);
-    cs.forEach(function(cel,i){ cel.classList.toggle("sel", i === nivel + 1); });
-  });
-  $$("#niveles button").forEach(function(b,i){
-    b.setAttribute("aria-pressed", String(i === nivel));
-  });
-}
+const contPlanes = $("#planes"), noteEl = $("#veh-note");
+const WA = "https://wa.me/51934965098";
+let nivel = 1;                       // la del medio es la más elegida
 
 function pintarPrecios(veh){
   const d = PRECIOS[veh];
-  if (typeof d === "string"){
-    selNiv.innerHTML = ""; pieNiv.textContent = ""; contTabla.innerHTML = "";
-    noteEl.textContent = d; return;
-  }
+  if (typeof d === "string"){ contPlanes.innerHTML = ""; noteEl.textContent = d; return; }
   nivel = clamp(nivel, 0, d.niveles.length - 1);
 
-  selNiv.innerHTML = d.niveles.map(function(n,i){
-    return '<button type="button" aria-pressed="'+(i===nivel)+'">'+n.nom+'</button>';
+  contPlanes.innerHTML = d.niveles.map(function(n,i){
+    const filas = d.filas.map(function(f){
+      const pares = f.celdas[i];
+      const val = pares.map(function(p,k){
+        return k === 0 ? '<span class="tnum">'+p[1]+'</span>'
+                       : '<small>'+p[0]+' · '+p[1]+'</small>';
+      }).join("");
+      return '<div class="row"><span class="k">'+f.svc+
+             '<small>'+pares[0][0]+'</small></span>'+
+             '<span class="v">'+val+'</span></div>';
+    }).join("");
+    const texto = "Hola, quiero un presupuesto de calidad " + n.nom +
+                  " para mi " + veh + ".";
+    return '<div class="plan" role="button" tabindex="0" data-n="'+i+'" '+
+             'aria-selected="'+(i===nivel)+'">'+
+      '<div class="plan-cab"><h3>'+n.nom+'</h3>'+
+        (n.tag ? '<span class="marca-tag">'+n.tag+'</span>' : '')+'</div>'+
+      '<p class="desc">'+n.pie+'</p>'+ filas +
+      '<div class="pedir"><a class="btn" href="'+WA+'?text='+encodeURIComponent(texto)+'">'+
+        'Pedir este acabado</a></div></div>';
   }).join("");
-  $$("#niveles button").forEach(function(b,i){
-    b.addEventListener("click", function(){
-      nivel = i; pieNiv.textContent = d.niveles[i].pie; marcaColumna();
+
+  const planes = $$("#planes .plan");
+  const elige = function(i){
+    nivel = i;
+    planes.forEach(function(el,k){ el.setAttribute("aria-selected", String(k===i)); });
+  };
+  planes.forEach(function(el,i){
+    el.addEventListener("click", function(e){
+      if (e.target.closest("a")) return;      // el botón de WhatsApp hace lo suyo
+      elige(i);
+    });
+    el.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " "){ e.preventDefault(); elige(i); }
     });
   });
-  pieNiv.textContent = d.niveles[nivel].pie;
-
-  const celda = function(pares){
-    return pares.map(function(p){
-      return '<span class="par"><span class="det">'+p[0]+'</span>'+
-             '<span class="pr tnum">'+p[1]+'</span></span>';
-    }).join("");
-  };
-  contTabla.innerHTML =
-    '<table class="tabla"><caption class="sr-only">Precios por servicio y nivel de acabado</caption>'+
-    '<thead><tr><td></td>'+
-      d.niveles.map(n => '<th scope="col">'+n.nom+'</th>').join("")+
-    '</tr></thead><tbody>'+
-      d.filas.map(function(f){
-        return '<tr><th scope="row">'+f.svc+'</th>'+
-               f.celdas.map(cs => '<td>'+celda(cs)+'</td>').join("")+'</tr>';
-      }).join("")+
-    '</tbody></table>';
-  marcaColumna();
   noteEl.textContent = "Precios referenciales por vehículo completo. Los daños por choque se presupuestan aparte.";
 }
 pintarPrecios("auto");
