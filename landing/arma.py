@@ -10,7 +10,9 @@ app  = open("app.js",    encoding="utf-8").read()
 fuentes = ('<source src="%s" type="video/webm">'
            '<source src="%s" type="video/mp4">') % (uri("g960.webm","video/webm"),
                                                     uri("g960.mp4","video/mp4"))
-html = html.replace("__POSTER__", uri("g960.jpg","image/jpeg"))
+html = html.replace("__POSTER__",  uri("g960.jpg",   "image/jpeg"))
+html = html.replace("__ANTES__",   uri("antes.jpg",  "image/jpeg"))
+html = html.replace("__DESPUES__", uri("despues.jpg","image/jpeg"))
 html = html.replace("<!--FUENTES-->", fuentes)
 html = html.replace("<!--JS-->", app)
 open("landing.html","w",encoding="utf-8").write(html)

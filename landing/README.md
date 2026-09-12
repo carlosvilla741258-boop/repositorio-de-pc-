@@ -39,3 +39,29 @@ del carro, y rellena cada mancha con el promedio de su vecindario limpio.
     python3 video/limpia.py c1.mp4 c1c.mp4
 
 `video/det.py` sólo cuenta manchas, para comparar antes y después.
+
+## Antes y después
+
+`antes.jpg` y `despues.jpg` (656×410, 16:10) salen de dos fotos de WhatsApp del
+mismo Datsun, tomadas con meses de diferencia. `fotos/a.jpg` y `fotos/b.jpg` son
+los originales tal como llegaron.
+
+Para que el comparador funcione, el carro tiene que caer en el mismo sitio y al
+mismo tamaño en las dos: si no, al arrastrar no se ve un carro cambiando, se ven
+dos fotos distintas cortándose a la mitad.
+
+El encaje **se midió, no se ajustó a ojo**. Como el color cambia por completo
+—lámina cruda contra rojo— comparar colores no sirve; se comparan **bordes**
+(costuras, pasos de rueda, llantas, ventanas, parachoques), que siguen en el
+mismo sitio. Con una correlación por FFT sobre el mapa de bordes, enmascarada a
+la zona del carro para que los dos fondos distintos no pesen, salió: escala
+1,020 y desplazamiento (+7, −15) sobre la foto del después.
+
+    python3 fotos/encaja.py      # aplica esa transformación
+
+Las dos fotos traían franjas negras (venían de video vertical); ambas tenían
+exactamente 720×540 de contenido.
+
+Las `<img>` del comparador llevan `pointer-events:none` y `draggable="false"`:
+sin eso el navegador arranca su propio arrastre de imagen al primer movimiento
+y el control se planta después de un paso.

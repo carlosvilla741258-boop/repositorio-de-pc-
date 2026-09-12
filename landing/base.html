@@ -169,7 +169,11 @@ section{padding-block:var(--s8)}
 .svc-row p{margin:var(--s1) 0 0;font-size:15px;color:var(--muted);max-width:52ch}
 .ba{position:relative;aspect-ratio:16/10;background:var(--surface);border:1px solid var(--line);
   overflow:hidden;touch-action:pan-y;cursor:ew-resize;--pos:50%}
-.ba svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ba svg,.ba img{position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:50% 50%;
+  /* Sin esto el navegador arranca su propio arrastre de imagen al primer
+     movimiento y se lleva el gesto: el control avanzaba un paso y se plantaba. */
+  pointer-events:none;user-select:none;-webkit-user-drag:none}
 .ba .before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
 .ba .divider{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:var(--red);
   transform:translateX(-1px);pointer-events:none}
@@ -180,11 +184,11 @@ section{padding-block:var(--s8)}
   background:rgba(12,12,14,.82);padding:4px 8px;color:var(--ink);pointer-events:none}
 .ba .tag.l{left:var(--s3)} .ba .tag.r{right:var(--s3)}
 .ba-hint{font-size:13px;color:var(--muted);margin-top:var(--s3)}
-.gallery{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
-@media(max-width:760px){.gallery{grid-template-columns:1fr}}
-.placeholder-note{border:1px dashed var(--line);padding:var(--s4);font-size:13px;
-  color:var(--muted);margin-top:var(--s5)}
-.placeholder-note code{color:var(--red-lit);font-family:ui-monospace,monospace;font-size:13px}
+.gallery{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
+@media(max-width:760px){.gallery{grid-template-columns:1fr;gap:var(--s5)}}
+.trabajo h3{font-family:var(--display);text-transform:uppercase;font-size:clamp(20px,2.4vw,28px);
+  line-height:1.05;margin:0 0 var(--s3)}
+.trabajo p{color:var(--muted);max-width:44ch;margin:0 0 var(--s4)}
 .contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,6vw,80px)}
 @media(max-width:860px){.contact{grid-template-columns:1fr}}
 .cline{display:grid;grid-template-columns:20ch 1fr;gap:var(--s4);padding-block:var(--s4);
@@ -319,47 +323,18 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
   <div class="gallery">
     <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
         aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-      <svg viewBox="0 0 320 200" class="after" aria-hidden="true">
-        <rect width="320" height="200" fill="#1a1013"/>
-        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="#c80018"/>
-        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="none" stroke="#ff5566" stroke-width="2"/>
-        <path d="M128 82h56v22h-64z" fill="#0c0c0e"/><path d="M196 84l30 20h-30z" fill="#0c0c0e"/>
-        <circle cx="102" cy="140" r="20" fill="#0c0c0e" stroke="#d8d8de" stroke-width="3"/>
-        <circle cx="228" cy="140" r="20" fill="#0c0c0e" stroke="#d8d8de" stroke-width="3"/></svg>
-      <svg viewBox="0 0 320 200" class="before" aria-hidden="true">
-        <rect width="320" height="200" fill="#242428"/>
-        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="#4a4a52"/>
-        <path d="M52 132h216l-8-30-40-26H120l-44 28-24 4z" fill="none" stroke="#6a6a74" stroke-width="2"/>
-        <path d="M128 82h56v22h-64z" fill="#2e2e34"/><path d="M196 84l30 20h-30z" fill="#2e2e34"/>
-        <circle cx="102" cy="140" r="20" fill="#17171a" stroke="#55555e" stroke-width="3"/>
-        <circle cx="228" cy="140" r="20" fill="#17171a" stroke="#55555e" stroke-width="3"/>
-        <g stroke="#7a7a86" stroke-width="1.4" opacity=".85"><path d="M150 96l14 12M168 92l10 16M136 104l16 8"/></g></svg>
+      <img draggable="false" class="after" src="__DESPUES__" alt="El mismo carro terminado, pintado de rojo">
+      <img draggable="false" class="before" src="__ANTES__" alt="El carro en lámina y masilla, antes de pintarlo">
       <span class="tag l">Antes</span><span class="tag r">Después</span>
       <div class="divider"></div><div class="knob">◂▸</div></div>
-      <p class="ba-hint">Ejemplo de demostración — sustituir por fotos reales del taller.</p></div>
-    <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
-        aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-      <svg viewBox="0 0 320 200" class="after" aria-hidden="true">
-        <rect width="320" height="200" fill="#141418"/>
-        <circle cx="160" cy="100" r="62" fill="#1c1c22" stroke="#c80018" stroke-width="5"/>
-        <circle cx="160" cy="100" r="26" fill="#c80018"/>
-        <g stroke="#e4e4ea" stroke-width="5"><path d="M160 42v22M160 136v22M98 100h22M200 100h22"/>
-        <path d="M116 56l16 16M204 128l16 16M204 72l16-16M116 144l16-16"/></g></svg>
-      <svg viewBox="0 0 320 200" class="before" aria-hidden="true">
-        <rect width="320" height="200" fill="#242428"/>
-        <circle cx="160" cy="100" r="62" fill="#3a3a42" stroke="#5e5e68" stroke-width="4"/>
-        <circle cx="160" cy="100" r="26" fill="#2a2a30"/>
-        <g stroke="#5e5e68" stroke-width="5"><path d="M160 42v22M160 136v22M98 100h22M200 100h22"/>
-        <path d="M116 56l16 16M204 128l16 16M204 72l16-16M116 144l16-16"/></g>
-        <g stroke="#8a8a96" stroke-width="2" opacity=".9"><path d="M120 128l-10 12M212 74l12-10"/></g></svg>
-      <span class="tag l">Antes</span><span class="tag r">Después</span>
-      <div class="divider"></div><div class="knob">◂▸</div></div>
-      <p class="ba-hint">Ejemplo de demostración — sustituir por fotos reales del taller.</p></div>
+      <p class="ba-hint">Las dos fotos están tomadas desde el mismo punto: al arrastrar,
+        el carro no se mueve — sólo cambia.</p></div>
+    <div class="trabajo">
+      <h3>Carrocería completa<br>y pintura</h3>
+      <p>Llegó con la carrocería picada y parchada, bajada a lámina por todo el
+        lateral y el capó. Se enderezó, se emparejó y se pintó completo.</p>
+      <a class="btn ghost" href="https://wa.me/51934965098">Consulta por el tuyo</a></div>
   </div>
-  <p class="placeholder-note">Para poner tus fotos: reemplaza cada
-    <code>&lt;svg class="before"&gt;</code> y <code>&lt;svg class="after"&gt;</code> por
-    <code>&lt;img class="before" src="assets/antes.jpg" alt=""&gt;</code> y
-    <code>&lt;img class="after" src="assets/despues.jpg" alt=""&gt;</code>.</p>
 </section>
 
 <section id="contacto" class="wrap" style="padding-top:0">
