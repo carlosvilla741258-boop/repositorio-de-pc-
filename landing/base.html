@@ -18,6 +18,7 @@
   --text:"Archivo",system-ui,-apple-system,sans-serif;
   --s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;--s6:64px;--s7:96px;--s8:140px;
   --gut:clamp(20px,5vw,64px);
+  --tap:44px;                       /* objetivo táctil mínimo cómodo */
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -38,7 +39,7 @@ p{margin:0 0 var(--s3);text-wrap:pretty}
 .eyebrow::before{content:"";width:34px;height:2px;background:var(--red);flex:none}
 .tnum{font-variant-numeric:tabular-nums}
 #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--red);z-index:60}
-header{position:sticky;top:0;z-index:50;background:rgba(12,12,14,.9);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:50;background:var(--ground);border-bottom:1px solid var(--line)}
 .bar{display:flex;justify-content:space-between;align-items:center;padding-block:var(--s3);gap:var(--s4)}
 .brand{font-family:var(--display);font-size:19px;letter-spacing:.06em;text-transform:uppercase;
   text-decoration:none;color:var(--ink);white-space:nowrap}
@@ -135,14 +136,48 @@ section{padding-block:var(--s8)}
 .rule{height:1px;background:var(--line);transform-origin:left center;margin-bottom:var(--s6)}
 .two{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,6vw,96px);align-items:start}
 @media(max-width:860px){.two{grid-template-columns:1fr}}
-.figures{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--line)}
-@media(max-width:640px){.figures{grid-template-columns:1fr}}
-.fig{padding:var(--s6) var(--s4);border-right:1px solid var(--line)}
-.fig:last-child{border-right:0}
-@media(max-width:640px){.fig{border-right:0;border-bottom:1px solid var(--line);padding-block:var(--s5)}
-  .fig:last-child{border-bottom:0}}
-.num{font-size:clamp(48px,8vw,80px);color:var(--red-lit);line-height:.9}
-.fig p{margin:var(--s2) 0 0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+/* Tres columnas iguales no dicen cuál importa, y dos de los tres números
+   estaban tapando información que sí tenemos: cuáles son los servicios y qué
+   días abrimos. El año de experiencia manda, y los otros dos se abren. */
+.cifras{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+  border-block:1px solid var(--line)}
+@media(max-width:860px){.cifras{grid-template-columns:1fr}}
+.cifra-lead{padding:var(--s6) var(--s5) var(--s6) 0;border-right:1px solid var(--line)}
+.cifra-lead .num{font-size:clamp(84px,12vw,168px);color:var(--red-lit);line-height:.8}
+.cifra-tit{font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(22px,2.6vw,34px);line-height:1;margin:var(--s3) 0 0}
+.cifra-txt{color:var(--muted);margin:var(--s3) 0 0;max-width:32ch;font-size:15px}
+.cifra-bloque{padding:var(--s5) 0 var(--s5) var(--s5)}
+.cifra-bloque+.cifra-bloque{border-top:1px solid var(--line)}
+@media(max-width:860px){
+  .cifra-lead{border-right:0;border-bottom:1px solid var(--line);padding:var(--s5) 0}
+  .cifra-bloque{padding-left:0}
+}
+.cifra-cab{display:flex;align-items:baseline;gap:var(--s3);margin:0 0 var(--s4)}
+.cifra-cab .num{font-size:clamp(34px,4.5vw,52px);color:var(--red-lit);line-height:.9}
+.cifra-cab b{font-family:var(--display);font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;font-size:13px;color:var(--muted)}
+
+/* Una sola mecánica para los dos bloques: tocas una ficha y la línea de abajo
+   cuenta el detalle. Así no son dos efectos distintos pegados. */
+.fichas{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4)}
+.fichas button{background:none;border:0;border-bottom:1px solid var(--line);
+  padding:var(--s1) 0;cursor:pointer;font-family:var(--text);font-size:15px;color:var(--ink);
+  transition:color 160ms ease,border-color 160ms ease}
+/* Rejilla y no flex: los siete días caben siempre en una fila. Encogen
+   juntos en pantallas estrechas en vez de dejar el domingo solo abajo. */
+.semana{display:grid;grid-template-columns:repeat(7,minmax(0,var(--tap)));
+  gap:var(--s2);justify-content:start}
+.semana button{width:100%;height:var(--tap);background:none;cursor:pointer;
+  border:1px solid var(--line);color:var(--muted);font-family:var(--display);
+  font-size:15px;letter-spacing:.04em;
+  transition:color 160ms ease,border-color 160ms ease}
+.semana button.abre{color:var(--ink);border-color:#3d3d45}
+.fichas button:hover,.fichas button:focus-visible,.fichas button[aria-pressed="true"],
+.semana button:hover,.semana button:focus-visible,.semana button[aria-pressed="true"]{
+  color:var(--red-lit);border-color:var(--red)}
+.cifra-det{margin:var(--s4) 0 0;font-size:14px;color:var(--muted);min-height:1.5em}
+.cifra-det b{color:var(--ink);font-weight:400}
 .tabs{display:flex;gap:var(--s1);margin-bottom:var(--s5);flex-wrap:wrap}
 .tab{font-family:var(--display);font-size:15px;letter-spacing:.1em;text-transform:uppercase;
   padding:12px 20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
@@ -189,6 +224,18 @@ section{padding-block:var(--s8)}
 .trabajo h3{font-family:var(--display);text-transform:uppercase;font-size:clamp(20px,2.4vw,28px);
   line-height:1.05;margin:0 0 var(--s3)}
 .trabajo p{color:var(--muted);max-width:44ch;margin:0 0 var(--s4)}
+/* Una lista numerada, no tres tarjetas: los pasos van en orden y el orden
+   es justo lo que una fila de tarjetas iguales no sabe decir. */
+.pasos{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.pasos li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s4);
+  align-items:start;padding:var(--s5) 0;border-bottom:1px solid var(--line)}
+.paso-n{font-family:var(--display);font-weight:700;font-size:clamp(28px,4vw,44px);
+  line-height:.9;color:var(--line);transition:color 200ms ease}
+.pasos li:hover .paso-n,.pasos li:focus-within .paso-n{color:var(--red)}
+.pasos h3{font-family:var(--display);text-transform:uppercase;
+  font-size:clamp(18px,2vw,24px);line-height:1.05;margin:0}
+.pasos p{color:var(--muted);margin:var(--s2) 0 0;max-width:52ch}
+.pasos .btn{margin-top:var(--s4)}
 .contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,6vw,80px)}
 @media(max-width:860px){.contact{grid-template-columns:1fr}}
 .cline{display:grid;grid-template-columns:20ch 1fr;gap:var(--s4);padding-block:var(--s4);
@@ -254,31 +301,72 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
   <div class="capitulos" id="capitulos"></div>
 </div>
 
-<div class="wrap"><div class="figures">
-  <div class="fig"><div class="num tnum">5</div><p>Años de experiencia</p></div>
-  <div class="fig"><div class="num tnum">6</div><p>Servicios especializados</p></div>
-  <div class="fig"><div class="num tnum">6</div><p>Días de atención por semana</p></div>
+<div class="wrap"><div class="cifras">
+  <div class="cifra-lead">
+    <div class="num tnum" data-cuenta="5">5</div>
+    <p class="cifra-tit">Años<br>en el oficio</p>
+    <p class="cifra-txt">Devolviéndoles a los carros de San Juan de Lurigancho el
+      aspecto con el que salieron de fábrica.</p>
+  </div>
+  <div>
+    <div class="cifra-bloque">
+      <p class="cifra-cab"><span class="num tnum" data-cuenta="6">6</span><b>Servicios</b></p>
+      <div class="fichas" data-fichas="#det-svc">
+        <button type="button" data-det="<b>Planchado</b> · desde S/ 80">Planchado</button>
+        <button type="button" data-det="<b>Enderezado</b> · se evalúa según el golpe">Enderezado</button>
+        <button type="button" data-det="<b>Pintura</b> · desde S/ 200">Pintura</button>
+        <button type="button" data-det="<b>Pulido</b> · desde S/ 350">Pulido</button>
+        <button type="button" data-det="<b>Cerámico</b> · desde S/ 400">Cerámico</button>
+        <button type="button" data-det="<b>Pintado de aros</b> · se evalúa según el juego">Pintado de aros</button>
+      </div>
+      <p class="cifra-det" id="det-svc" data-base="Toca un servicio y te digo desde cuánto."
+         aria-live="polite">Toca un servicio y te digo desde cuánto.</p>
+    </div>
+    <div class="cifra-bloque">
+      <p class="cifra-cab"><span class="num tnum" data-cuenta="6">6</span><b>Días de atención</b></p>
+      <div class="semana" data-fichas="#det-dia">
+        <button type="button" class="abre" aria-label="Lunes"
+          data-det="<b>Lunes</b> · 8:00 – 18:00">L</button>
+        <button type="button" class="abre" aria-label="Martes"
+          data-det="<b>Martes</b> · 8:00 – 18:00">M</button>
+        <button type="button" class="abre" aria-label="Miércoles"
+          data-det="<b>Miércoles</b> · 8:00 – 18:00">M</button>
+        <button type="button" class="abre" aria-label="Jueves"
+          data-det="<b>Jueves</b> · 8:00 – 18:00">J</button>
+        <button type="button" class="abre" aria-label="Viernes"
+          data-det="<b>Viernes</b> · 8:00 – 18:00">V</button>
+        <button type="button" class="abre" aria-label="Sábado"
+          data-det="<b>Sábado</b> · 8:00 – 14:00">S</button>
+        <button type="button" aria-label="Domingo"
+          data-det="<b>Domingo</b> · cerrado">D</button>
+      </div>
+      <p class="cifra-det" id="det-dia" data-base="Lunes a viernes · 8:00 – 18:00 · sábados hasta las 14:00"
+         aria-live="polite">Lunes a viernes · 8:00 – 18:00 · sábados hasta las 14:00</p>
+    </div>
+  </div>
 </div></div>
 
 <section class="wrap">
   <div class="rule"></div>
   <div class="two" style="margin-bottom:var(--s6)">
-    <div><p class="eyebrow">Los dos que rematan el trabajo</p>
-      <h2>Cerámico<br>y aros</h2></div>
-    <p class="lead">Van al final del proceso. El cerámico sella la pintura recién pulida
-      y elige cuántos años dura; los aros se desmontan y se pintan aparte para que el
-      acabado quede parejo.</p>
+    <div><p class="eyebrow">Cómo empezamos</p>
+      <h2>Pide tu<br>presupuesto</h2></div>
+    <p class="lead">No hace falta que muevas el carro para saber cuánto cuesta.
+      Con unas fotos te damos un estimado.</p>
   </div>
-  <div class="svc-row">
-    <div><h3>Tratamiento cerámico</h3>
-      <p>Sella la pintura y la protege del sol, la lluvia y el polvo. Eliges cuántos años dura.</p></div>
-    <div class="v">S/ 400 – 3500</div>
-  </div>
-  <div class="svc-row">
-    <div><h3>Remodelación y pintado de aros</h3>
-      <p>Renovamos el aspecto de tus aros como si fueran nuevos, sin cambiarlos.</p></div>
-    <div class="v">Consultar</div>
-  </div>
+  <ol class="pasos">
+    <li><span class="paso-n tnum">01</span>
+      <div><h3>Mándanos fotos por WhatsApp</h3>
+        <p>Del daño de cerca y el carro entero de lejos. Dinos la marca, el modelo
+          y el año.</p>
+        <a class="btn" href="https://wa.me/51934965098">Escribir por WhatsApp</a></div></li>
+    <li><span class="paso-n tnum">02</span>
+      <div><h3>Te damos un estimado</h3>
+        <p>Con lo que entra en el precio y lo que habría que ver en persona.</p></div></li>
+    <li><span class="paso-n tnum">03</span>
+      <div><h3>Traes el carro y cerramos</h3>
+        <p>Av. Sta. Rosa de Lima 752, San Juan de Lurigancho. De lunes a sábado.</p></div></li>
+  </ol>
 </section>
 
 <section id="precios" class="wrap" style="padding-top:0">

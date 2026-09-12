@@ -263,6 +263,57 @@ addEventListener("scroll", function(){
 addEventListener("resize", marco, {passive:true});
 marco();
 
+/* ── Cifras ── */
+/* Los números suben al llegar a ellos. Nunca se quedan en cero: si el
+   navegador no trae IntersectionObserver, o el bloque ya quedó arriba, o el
+   aviso no llega, se escribe el valor final igual. */
+$$("[data-cuenta]").forEach(function(el){
+  const fin = +el.dataset.cuenta;
+  const pon = function(){ el.textContent = fin; };
+  if (reduce || !("IntersectionObserver" in window)){ pon(); return; }
+  if (el.getBoundingClientRect().top < innerHeight){ pon(); return; }
+  el.textContent = "0";
+  let hecho = false;
+  const sube = function(){
+    if (hecho) return; hecho = true;
+    const t0 = performance.now();
+    (function paso(t){
+      const k = Math.min((t - t0)/700, 1);
+      el.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(paso); else pon();
+    })(t0);
+  };
+  const ob = new IntersectionObserver(function(es){
+    if (es[0].isIntersecting){ ob.disconnect(); sube(); }
+  }, {threshold:.6});
+  ob.observe(el);
+  setTimeout(function(){ if (!hecho){ ob.disconnect(); pon(); } }, 8000);
+});
+
+/* Fichas: pasar por encima cuenta el detalle; tocar lo fija. Al salir vuelve
+   a lo fijado, o a la frase de siempre si no se ha fijado nada. */
+$$("[data-fichas]").forEach(function(cont){
+  const det = $(cont.dataset.fichas);
+  if (!det) return;
+  const base = det.dataset.base;
+  const botones = Array.prototype.slice.call(cont.querySelectorAll("button"));
+  let fijo = null;
+  const muestra = function(b){ det.innerHTML = b ? b.dataset.det : base; };
+  botones.forEach(function(b){
+    b.addEventListener("mouseenter", function(){ muestra(b); });
+    b.addEventListener("focus",      function(){ muestra(b); });
+    b.addEventListener("click", function(){
+      fijo = (fijo === b) ? null : b;
+      botones.forEach(function(o){ o.setAttribute("aria-pressed", String(o === fijo)); });
+      muestra(fijo);
+    });
+  });
+  cont.addEventListener("mouseleave", function(){ muestra(fijo); });
+  cont.addEventListener("focusout", function(e){
+    if (!cont.contains(e.relatedTarget)) muestra(fijo);
+  });
+});
+
 /* ── Comparador antes/después ── */
 $$("[data-ba]").forEach(function(ba){
   const set = function(pct){
