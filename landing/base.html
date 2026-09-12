@@ -41,8 +41,10 @@ p{margin:0 0 var(--s3);text-wrap:pretty}
 #progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--red);z-index:60}
 header{position:sticky;top:0;z-index:50;background:var(--ground);border-bottom:1px solid var(--line)}
 .bar{display:flex;justify-content:space-between;align-items:center;padding-block:var(--s3);gap:var(--s4)}
-.brand{font-family:var(--display);font-size:19px;letter-spacing:.06em;text-transform:uppercase;
+.brand{display:inline-flex;align-items:center;gap:var(--s2);
+  font-family:var(--display);font-size:19px;letter-spacing:.06em;text-transform:uppercase;
   text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand .logo{height:34px;width:auto;display:block;flex:none}
 .brand b{color:var(--red-lit)}
 nav{display:flex;gap:var(--s4);flex-wrap:wrap}
 nav a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
@@ -50,10 +52,15 @@ nav a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;
 nav a:hover,nav a:focus-visible{color:var(--ink)}
 @media(max-width:900px){nav{display:none}}
 /* A 360 px la marca y el botón no caben juntos: se compacta el botón. */
-@media(max-width:430px){
-  .brand{font-size:16px}
-  header .btn{padding:10px 14px;font-size:12px;letter-spacing:.06em}
-  .bar{gap:var(--s3)}
+header .btn{padding:12px 20px;font-size:13px}
+/* "Dinos tu presupuesto" es largo: en pantallas estrechas se parte en dos
+   líneas y se ajusta la marca, en vez de empujar la página a lo ancho. */
+@media(max-width:560px){
+  .brand{font-size:15px}
+  .brand .logo{height:28px}
+  header .btn{padding:8px 12px;font-size:11px;letter-spacing:.04em;
+    white-space:normal;text-align:center;line-height:1.15}
+  .bar{gap:var(--s2)}
 }
 .btn{display:inline-block;font-family:var(--display);font-size:15px;letter-spacing:.08em;
   text-transform:uppercase;text-decoration:none;padding:16px 24px;border:2px solid var(--red);
@@ -183,16 +190,41 @@ section{padding-block:var(--s8)}
   padding:12px 20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
   cursor:pointer;transition:background 130ms ease,border-color 130ms ease,color 130ms ease}
 .tab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
-.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);align-items:start}
-@media(max-width:860px){.tiers{grid-template-columns:1fr}}
-.tier{background:var(--surface);border:1px solid var(--line);padding:var(--s5) var(--s4)}
-.tier.featured{border-color:var(--red);background:var(--surface-2)}
-.tier .desc{font-size:15px;color:var(--muted);margin-block:var(--s2) var(--s4)}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);
-  padding-block:var(--s3);border-top:1px solid var(--line)}
-.row .k{font-weight:600;font-size:15px}
-.row .k small{display:block;font-weight:400;font-size:13px;color:var(--muted);text-transform:none}
-.row .v{font-family:var(--display);font-size:19px;color:var(--red-lit);white-space:nowrap}
+/* Antes eran tres tarjetas sueltas: para comparar pintura entre niveles
+   había que leer tres bloques distintos. Ahora es una tabla — servicio por
+   fila, nivel por columna — y elegir un nivel enciende su columna. */
+.niveles{display:flex;max-width:44rem;border:1px solid var(--line);margin-bottom:var(--s4)}
+.niveles button{flex:1;font-family:var(--display);font-size:14px;letter-spacing:.1em;
+  text-transform:uppercase;padding:14px var(--s3);background:none;border:0;
+  border-right:1px solid var(--line);color:var(--muted);cursor:pointer;
+  box-shadow:inset 0 0 0 0 var(--red);
+  transition:background 150ms ease,color 150ms ease,box-shadow 200ms ease}
+.niveles button:last-child{border-right:0}
+.niveles button:hover{color:var(--ink)}
+.niveles button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink);
+  box-shadow:inset 0 -3px 0 0 var(--red)}
+.nivel-pie{color:var(--muted);font-size:15px;margin:0 0 var(--s5);min-height:1.5em}
+
+.tabla{width:100%;border-collapse:collapse}
+.tabla th,.tabla td{text-align:left;padding:var(--s4) var(--s3);vertical-align:top;
+  border-bottom:1px solid var(--line);transition:background 150ms ease}
+.tabla thead th{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  letter-spacing:.12em;font-size:12px;color:var(--muted);padding-block:var(--s3)}
+.tabla tbody th{font-weight:600;font-size:16px;white-space:nowrap;width:1%}
+.tabla tbody tr:hover th{box-shadow:inset 3px 0 0 0 var(--red)}
+.tabla .det{display:block;font-size:13px;color:var(--muted)}
+.tabla .pr{font-family:var(--display);font-size:19px;color:#8b8782;white-space:nowrap;
+  transition:color 150ms ease}
+.tabla .par+.par{margin-top:var(--s3)}
+.tabla .sel{background:var(--surface-2)}
+.tabla thead th.sel{color:var(--ink)}
+.tabla td.sel .pr{color:var(--red-lit)}
+@media(max-width:760px){
+  /* En el celular sólo se enseña el nivel elegido: cuatro columnas no caben
+     y la tabla queda en servicio y precio. */
+  .tabla :is(th,td):not(.sel):not(:first-child){display:none}
+  .tabla th,.tabla td{padding-inline:0}
+}
 .note{font-size:13px;color:var(--muted);margin-top:var(--s4)}
 .lead-service{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--red);
   padding:var(--s5);display:grid;grid-template-columns:1fr auto;gap:var(--s4);align-items:center}
@@ -268,10 +300,10 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 
 <div id="progress"></div>
 <header><div class="wrap bar">
-  <a class="brand" href="#top">Abarca <b>Factoría</b></a>
+  <a class="brand" href="#top"><!--LOGO--><span>Abarca <b>Factoría</b></span></a>
   <nav><a href="#proceso">El proceso</a><a href="#precios">Precios</a>
     <a href="#trabajos">Trabajos</a><a href="#contacto">Contacto</a></nav>
-  <a class="btn" href="https://wa.me/51934965098" style="padding:12px 20px;font-size:13px">Presupuesto</a>
+  <a class="btn" href="https://wa.me/51934965098">Dinos tu presupuesto</a>
 </div></header>
 
 <main id="top">
@@ -382,7 +414,9 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
     <button class="tab" role="tab" aria-selected="false" data-veh="camioneta">Camioneta</button>
     <button class="tab" role="tab" aria-selected="false" data-veh="minivan">Minivan</button>
   </div>
-  <div class="tiers" id="tiers"></div>
+  <div class="niveles" id="niveles" role="group" aria-label="Nivel de acabado"></div>
+  <p class="nivel-pie" id="nivel-pie"></p>
+  <div id="tabla-cont"></div>
   <p class="note" id="veh-note"></p>
 </section>
 

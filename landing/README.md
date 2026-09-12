@@ -65,3 +65,33 @@ exactamente 720×540 de contenido.
 Las `<img>` del comparador llevan `pointer-events:none` y `draggable="false"`:
 sin eso el navegador arranca su propio arrastre de imagen al primer movimiento
 y el control se planta después de un paso.
+
+## El logo
+
+`logo.png` (256×256, RGBA) sale de `fotos/logo_src.jpg`. El original llegó en
+**JPEG, que no guarda transparencia**: lo que era fondo transparente venía como
+el cuadriculado gris del editor, cuadro por cuadro.
+
+Se recupera el alfa por saturación en vez de recortar a mano. El fondo es
+neutro (R=G=B) y la marca es roja pura, así que `R − max(G,B)` vale cero en
+cualquier cuadro del tablero —blanco o gris— y su máximo dentro de la marca.
+Eso da el alfa directamente, con los bordes suavizados incluidos, y de paso
+sirve para cualquier cuadriculado, no sólo para este.
+
+    python3 fotos/saca_logo.py
+
+`arma.py` lo incrusta solo si el archivo existe: lo mete al lado de la marca y
+lo pone como icono de pestaña. Si no está, la marca se queda en texto y la
+página no enseña una imagen rota.
+
+## El tablero de precios
+
+Eran tres tarjetas sueltas, una por nivel de acabado. Para comparar cuánto
+cuesta la pintura en cada nivel había que leer tres bloques distintos, y el
+linter lo marcaba como `three-cards`.
+
+Ahora es una tabla: **el servicio manda la fila y el nivel la columna**, que es
+como de verdad se comparan. Elegir un nivel enciende su columna y apaga —sin
+esconder— las otras dos, así que puedes leer la tuya de corrido sin perder la
+comparación. En el celular no caben cuatro columnas, así que se enseña sólo la
+elegida y la tabla queda en servicio y precio.

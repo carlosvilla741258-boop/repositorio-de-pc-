@@ -38,18 +38,25 @@ const CAPS = [
 ];
 CAPS.forEach(function(c,i){ c.t0 = T0[i]; c.fin = FIN[i]; });
 
+/* Una matriz, no tres listas sueltas: el servicio manda la fila y el nivel de
+   acabado la columna, que es como de verdad se comparan. */
 const PRECIOS = {
- auto:[
-  {t:"Calidad básica", d:"Cuidado esencial para mantener tu vehículo en buen estado.", f:false,
-   r:[["Pintura","Colores planos","S/ 200 – 400"],["Pulido","Básico","S/ 350"],
-      ["Cerámico","Duración 1 año","S/ 400 – 700"]]},
-  {t:"Calidad media", d:"El equilibrio ideal entre acabado y precio.", f:true,
-   r:[["Pintura","Tricapa","S/ 350"],["Pulido","3 pasos","S/ 700"],
-      ["Cerámico","Duración 3 años","S/ 600 – 800"]]},
-  {t:"Calidad premium", d:"El acabado más fino, como recién salido de fábrica.", f:false,
-   r:[["Pintura","Candy","S/ 450 – 600"],["Pulido","3 pasos","S/ 900 – 1200"],
-      ["Cerámico","5 años","S/ 1200"],["Cerámico","7 años","S/ 2500"],
-      ["Cerámico","9 años","S/ 3500"]]}],
+ auto:{
+  niveles:[
+   {nom:"Básica",  pie:"Cuidado esencial para mantener el carro en buen estado."},
+   {nom:"Media",   pie:"El equilibrio entre acabado y precio."},
+   {nom:"Premium", pie:"El acabado más fino, como recién salido de fábrica."}],
+  filas:[
+   {svc:"Pintura",  celdas:[[["Colores planos","S/ 200 – 400"]],
+                            [["Tricapa","S/ 350"]],
+                            [["Candy","S/ 450 – 600"]]]},
+   {svc:"Pulido",   celdas:[[["Un paso","S/ 350"]],
+                            [["Tres pasos","S/ 700"]],
+                            [["Tres pasos","S/ 900 – 1200"]]]},
+   {svc:"Cerámico", celdas:[[["Dura 1 año","S/ 400 – 700"]],
+                            [["Dura 3 años","S/ 600 – 800"]],
+                            [["Dura 5 años","S/ 1200"],["Dura 7 años","S/ 2500"],
+                             ["Dura 9 años","S/ 3500"]]]}]},
  camioneta:"Precios de camioneta: consúltanos por WhatsApp — varían según el tamaño del vehículo.",
  minivan:"Precios de minivan: por confirmar."
 };
@@ -59,21 +66,61 @@ const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 const clamp = (v,a,b) => v<a?a:(v>b?b:v);
 
 /* ── Precios ── */
-const tiersEl = $("#tiers"), noteEl = $("#veh-note");
-function pintarTiers(veh){
+const selNiv = $("#niveles"), pieNiv = $("#nivel-pie"),
+      contTabla = $("#tabla-cont"), noteEl = $("#veh-note");
+let nivel = 1;                       // arranca en el del medio
+
+function marcaColumna(){
+  $$("#tabla-cont .tabla tr").forEach(function(tr){
+    const cs = Array.prototype.slice.call(tr.children);
+    cs.forEach(function(cel,i){ cel.classList.toggle("sel", i === nivel + 1); });
+  });
+  $$("#niveles button").forEach(function(b,i){
+    b.setAttribute("aria-pressed", String(i === nivel));
+  });
+}
+
+function pintarPrecios(veh){
   const d = PRECIOS[veh];
-  if (typeof d === "string"){ tiersEl.innerHTML=""; noteEl.textContent=d; return; }
-  tiersEl.innerHTML = d.map(t =>
-    '<article class="tier'+(t.f?" featured":"")+'"><h3>'+t.t+'</h3>'+
-    '<p class="desc">'+t.d+'</p>'+
-    t.r.map(r => '<div class="row"><span class="k">'+r[0]+'<small>'+r[1]+'</small></span>'+
-                 '<span class="v tnum">'+r[2]+'</span></div>').join("")+'</article>').join("");
+  if (typeof d === "string"){
+    selNiv.innerHTML = ""; pieNiv.textContent = ""; contTabla.innerHTML = "";
+    noteEl.textContent = d; return;
+  }
+  nivel = clamp(nivel, 0, d.niveles.length - 1);
+
+  selNiv.innerHTML = d.niveles.map(function(n,i){
+    return '<button type="button" aria-pressed="'+(i===nivel)+'">'+n.nom+'</button>';
+  }).join("");
+  $$("#niveles button").forEach(function(b,i){
+    b.addEventListener("click", function(){
+      nivel = i; pieNiv.textContent = d.niveles[i].pie; marcaColumna();
+    });
+  });
+  pieNiv.textContent = d.niveles[nivel].pie;
+
+  const celda = function(pares){
+    return pares.map(function(p){
+      return '<span class="par"><span class="det">'+p[0]+'</span>'+
+             '<span class="pr tnum">'+p[1]+'</span></span>';
+    }).join("");
+  };
+  contTabla.innerHTML =
+    '<table class="tabla"><caption class="sr-only">Precios por servicio y nivel de acabado</caption>'+
+    '<thead><tr><td></td>'+
+      d.niveles.map(n => '<th scope="col">'+n.nom+'</th>').join("")+
+    '</tr></thead><tbody>'+
+      d.filas.map(function(f){
+        return '<tr><th scope="row">'+f.svc+'</th>'+
+               f.celdas.map(cs => '<td>'+celda(cs)+'</td>').join("")+'</tr>';
+      }).join("")+
+    '</tbody></table>';
+  marcaColumna();
   noteEl.textContent = "Precios referenciales por vehículo completo. Los daños por choque se presupuestan aparte.";
 }
-pintarTiers("auto");
+pintarPrecios("auto");
 $$(".tab").forEach(tab => tab.addEventListener("click", () => {
   $$(".tab").forEach(t => t.setAttribute("aria-selected", String(t===tab)));
-  pintarTiers(tab.dataset.veh);
+  pintarPrecios(tab.dataset.veh);
 }));
 
 /* ── Escenario ── */
