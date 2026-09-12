@@ -63,9 +63,16 @@ nav a:hover,nav a:focus-visible{color:var(--ink)}
 :focus-visible{outline:2px solid var(--red-lit);outline-offset:3px}
 
 /* ── el escenario: el video manda y la información flota encima ── */
-.scrolly{position:relative;height:760vh}
-.stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#08080a}
-.marco{position:absolute;inset:0;padding-top:72px;display:grid;place-items:center}
+ /* Los trabajos se pasan con las flechas, no con el scroll: el escenario
+   ocupa una pantalla y bajar lleva al resto de la página. `touch-action`
+   deja pasar el desplazamiento vertical del dedo y nos reserva el
+   horizontal, que es el que usamos para cambiar de trabajo. */
+.scrolly{position:relative}
+/* Una pantalla justa: la cabecera ya ocupa su sitio arriba, así que se le
+   descuenta. `--cab` la mide el guion, que no siempre son 82 px. */
+.stage{position:relative;height:calc(100vh - var(--cab,82px));
+  height:calc(100svh - var(--cab,82px));overflow:hidden;background:#08080a;touch-action:pan-y}
+.marco{position:absolute;inset:0;display:grid;place-items:center}
 video{width:100%;height:100%;object-fit:contain;display:block;background:#08080a}
 .avance-pista{position:absolute;left:0;right:0;bottom:0;height:2px;
   background:rgba(255,255,255,.10);z-index:4}
@@ -91,18 +98,34 @@ video{width:100%;height:100%;object-fit:contain;display:block;background:#08080a
   font-weight:700;letter-spacing:.02em}
 .panel .cta{display:flex;gap:var(--s3);flex-wrap:wrap;margin-top:var(--s4);
   padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.16)}
-.pista{position:absolute;left:50%;top:88px;transform:translateX(-50%);font-size:12px;
+.pista{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;
   letter-spacing:.2em;text-transform:uppercase;color:#b7b2aa;pointer-events:none;z-index:4;
-  text-shadow:0 1px 10px rgba(0,0,0,.9);transition:opacity 300ms ease}
-.marcador{position:absolute;right:var(--gut);top:50%;transform:translateY(-50%);
-  display:grid;gap:12px;z-index:4}
-@media(max-width:900px){.marcador{display:none}}
-.marcador i{display:block;width:2px;height:24px;background:rgba(255,255,255,.22);
-  transition:background 200ms ease}
-.marcador i.on{background:var(--red)}
+  text-align:center;text-shadow:0 1px 10px rgba(0,0,0,.9);transition:opacity 300ms ease}
+
+/* El recorrido es horizontal, así que las marcas también: además de decir
+   en qué trabajo estás, cada una lleva al suyo. */
+.marcador{position:absolute;left:50%;top:16px;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:5}
+.marcador button{width:26px;height:3px;padding:0;border:0;border-radius:2px;cursor:pointer;
+  background:rgba(255,255,255,.24);transition:background 200ms ease}
+.marcador button:hover{background:rgba(255,255,255,.5)}
+.marcador button.on,.marcador button.on:hover{background:var(--red)}
+
+.flecha{position:absolute;top:var(--eje,50%);transform:translateY(-50%);z-index:5;
+  width:54px;height:54px;display:grid;place-items:center;padding:0;
+  border:1px solid rgba(255,255,255,.28);border-radius:50%;color:#efece7;cursor:pointer;
+  background:rgba(8,8,10,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  transition:background 180ms ease,border-color 180ms ease,opacity 180ms ease}
+.flecha:hover{background:rgba(8,8,10,.82);border-color:rgba(255,255,255,.62)}
+.flecha[disabled]{opacity:.2;cursor:default}
+.flecha.izq{left:clamp(10px,2.5vw,28px)}
+.flecha.der{right:clamp(10px,2.5vw,28px)}
+.flecha svg{width:20px;height:20px;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:900px){
-  /* El video sube para que el velo no se le coma encima. */
+  /* El video sube para que el velo no se le coma encima; las flechas suben
+     con él para quedar sobre el video y no sobre el texto. */
   .marco{padding-bottom:42vh}
+  .flecha{width:46px;height:46px}
   .panel{padding-top:var(--s6)}
   .panel-in{grid-template-columns:1fr;gap:var(--s3);align-items:start}
 }
@@ -184,7 +207,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 .estatico .stage{position:static;height:auto;overflow:visible}
 .estatico .marco{position:static;padding:0}
 .estatico .panel{position:static;background:none;padding-inline:var(--gut)}
-.estatico .pista,.estatico .marcador{display:none}
+.estatico .pista,.estatico .marcador,.estatico .flecha{display:none}
 .capitulos{display:none}
 .estatico .capitulos{display:grid;gap:var(--s5);padding:var(--s6) var(--gut) var(--s7);
   max-width:1180px;margin:0 auto}
@@ -212,7 +235,13 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
     </div>
       <div class="avance-pista" aria-hidden="true"><i id="avance"></i></div>
       <div class="marcador" id="marcador" aria-hidden="true"></div>
-      <p class="pista" id="pista">Desplázate</p>
+      <button class="flecha izq" id="atras" type="button" aria-label="Trabajo anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+      <button class="flecha der" id="adelante" type="button" aria-label="Trabajo siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <p class="pista" id="pista"></p>
     <div class="panel"><div class="panel-in">
       <div><p class="chapno" id="cap-no"></p><h2 id="cap-tit"></h2></div>
       <div><p class="lead" id="cap-txt"></p><div class="tarifas" id="cap-tar"></div></div>

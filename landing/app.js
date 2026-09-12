@@ -2,7 +2,7 @@
 (function(){
 "use strict";
 
-/* El scroll elige el tramo; el video lo reproduce entero solo y se detiene.
+/* Las flechas eligen el tramo; el video lo reproduce entero solo y se detiene.
    Cada tramo son los 8,04 s completos del clip más 0,2 s de negro: ese
    colchón es el seguro contra el salto al tramo siguiente. */
 /* Tiempos MEDIDOS del propio archivo con detección de negros, no calculados:
@@ -77,11 +77,34 @@ $$(".tab").forEach(tab => tab.addEventListener("click", () => {
 }));
 
 /* ── Escenario ── */
+/* El escenario ocupa la pantalla menos la cabecera, y la cabecera cambia de
+   alto según el ancho: se mide en vez de darla por supuesta. */
+function mideCabecera(){
+  const h = $("header").offsetHeight;
+  if (h) document.documentElement.style.setProperty("--cab", h + "px");
+}
+mideCabecera();
+addEventListener("resize", mideCabecera, {passive:true});
+
 const v = $("#v"), peli = $("#proceso"), marcador = $("#marcador"), pista = $("#pista");
 const avance = $("#avance");
 const capNo = $("#cap-no"), capTit = $("#cap-tit"), capTxt = $("#cap-txt"), capTar = $("#cap-tar");
-CAPS.forEach(() => marcador.insertAdjacentHTML("beforeend","<i></i>"));
-const ticks = $$("#marcador i");
+CAPS.forEach(function(c,i){
+  marcador.insertAdjacentHTML("beforeend",
+    '<button type="button" aria-label="Ir a '+c.t.split("\n").join(" ")+'"></button>');
+});
+const ticks = $$("#marcador button");
+ticks.forEach(function(t,i){ t.addEventListener("click", function(){ irA(i); }); });
+const atras = $("#atras"), adelante = $("#adelante");
+
+/* Las flechas van al centro del video, no al centro del escenario: en un
+   celular el video ocupa la franja de arriba y el centro cae sobre el texto. */
+function ejeFlechas(){
+  const rv = v.getBoundingClientRect(), rs = peli.getBoundingClientRect();
+  if (rv.height) document.documentElement.style.setProperty(
+    "--eje", ((rv.top - rs.top) + rv.height/2).toFixed(0) + "px");
+}
+addEventListener("resize", ejeFlechas, {passive:true});
 
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let cap = -1, listo = false, bloqueado = false;
@@ -101,6 +124,8 @@ function tarjeta(i){
       '<span class="tarifa">'+x[0]+'<b class="tnum">'+x[1]+'</b></span>').join("");
   }
   ticks.forEach((t,k) => t.classList.toggle("on", k===i));
+  atras.disabled    = i === 0;
+  adelante.disabled = i === CAPS.length - 1;
 }
 
 /* Entrar en un tramo: saltar a su inicio y dejarlo correr. */
@@ -137,10 +162,9 @@ function vigilar(){
       v.pause();
       try { v.currentTime = c.fin; } catch(e){}
       avance.style.width = "100%";
-      if (cap < CAPS.length - 1){
-        pista.textContent = "Sigue desplazándote";
-        pista.style.opacity = 1;
-      } else { pista.style.opacity = 0; }
+      /* Al acabar el tramo no hace falta decir nada: la flecha derecha
+         queda encendida y es la que lleva al siguiente trabajo. */
+      pista.style.opacity = 0;
       vigilando = false;
       return;
     }
@@ -165,6 +189,7 @@ function aEstatico(){
 
 function metadatos(){
   listo = (v.duration || 0) > 0;
+  ejeFlechas();
   if (listo && !reduce) irA(0);
 }
 v.addEventListener("loadedmetadata", metadatos);
@@ -177,6 +202,7 @@ v.addEventListener("error", function(){
 });
 
 tarjeta(0);
+ejeFlechas();
 if (reduce) aEstatico();
 
 /* Si el navegador bloqueó la reproducción, el primer gesto la libera. */
@@ -189,24 +215,53 @@ function desbloquear(){
 addEventListener("pointerdown", desbloquear, {passive:true});
 addEventListener("keydown", desbloquear);
 
-/* El scroll sólo elige el tramo. */
+/* ── Pasar de un trabajo a otro ── */
+function mover(paso){
+  const d = clamp(cap + paso, 0, CAPS.length - 1);
+  if (d !== cap) irA(d);
+}
+atras.addEventListener("click",    function(){ mover(-1); });
+adelante.addEventListener("click", function(){ mover(+1); });
+
+/* Con el dedo: sólo cuenta el gesto claramente horizontal, para no robarle
+   el desplazamiento vertical a la página. */
+let x0 = null, y0 = null, arrastre = false;
+peli.addEventListener("touchstart", function(e){
+  if (e.touches.length !== 1) { x0 = null; return; }
+  x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; arrastre = false;
+}, {passive:true});
+peli.addEventListener("touchmove", function(e){
+  if (x0 === null || arrastre) return;
+  const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4){
+    arrastre = true;
+    mover(dx < 0 ? +1 : -1);   // se arrastra hacia la izquierda: viene el siguiente
+  }
+}, {passive:true});
+peli.addEventListener("touchend", function(){ x0 = null; }, {passive:true});
+
+/* Con el teclado, mientras el escenario esté a la vista. */
+addEventListener("keydown", function(e){
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  const t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+  const r = peli.getBoundingClientRect();
+  if (r.bottom < 120 || r.top > innerHeight - 120) return;
+  mover(e.key === "ArrowRight" ? +1 : -1);
+});
+
+/* La barra de arriba mide la página entera, no el escenario. */
 let pendiente = false;
 function marco(){
   pendiente = false;
-  const r = peli.getBoundingClientRect();
-  const total = peli.offsetHeight - innerHeight;
-  const p = clamp(total > 0 ? (-r.top)/total : 0, 0, 1);
-  irA(clamp(Math.floor(p * CAPS.length), 0, CAPS.length - 1));
   const h = document.documentElement.scrollHeight - innerHeight;
   $("#progress").style.width = (h>0 ? (scrollY/h)*100 : 0) + "%";
 }
-if (!reduce){
-  addEventListener("scroll", function(){
-    if(!pendiente){ pendiente = true; requestAnimationFrame(marco); }
-  }, {passive:true});
-  addEventListener("resize", marco, {passive:true});
-  marco();
-}
+addEventListener("scroll", function(){
+  if(!pendiente){ pendiente = true; requestAnimationFrame(marco); }
+}, {passive:true});
+addEventListener("resize", marco, {passive:true});
+marco();
 
 /* ── Comparador antes/después ── */
 $$("[data-ba]").forEach(function(ba){
