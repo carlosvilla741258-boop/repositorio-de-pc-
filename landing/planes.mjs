@@ -17,11 +17,12 @@ console.log('al entrar:', JSON.stringify(await est(), null, 0));
 await p.click('.plan:nth-child(3)'); await p.waitForTimeout(250);
 console.log('tras tocar Premium -> elegido:', await p.evaluate(()=>
   [...document.querySelectorAll('.plan')].findIndex(x=>x.getAttribute('aria-selected')==='true')));
-await p.click('.tab[data-veh="camioneta"]'); await p.waitForTimeout(200);
-console.log('camioneta -> planes:', await p.evaluate(()=>document.querySelectorAll('.plan').length),
-  '| nota:', await p.evaluate(()=>document.getElementById('veh-note').textContent.slice(0,28)));
-await p.click('.tab[data-veh="auto"]'); await p.waitForTimeout(200);
-console.log('vuelta auto -> planes:', await p.evaluate(()=>document.querySelectorAll('.plan').length));
+const pest = await p.evaluate(()=>document.querySelectorAll('.tab, [data-veh]').length);
+console.log('pestañas de vehículo:', pest, pest===0?'✓ ninguna':'✗ quedan');
+const wa = await p.evaluate(()=>[...document.querySelectorAll('.plan .pedir a')]
+  .every(a=>decodeURIComponent(a.getAttribute('href')).includes('para mi auto')));
+console.log('enlaces de WhatsApp dicen "para mi auto":', wa?'✓':'✗');
+console.log('nota:', await p.evaluate(()=>document.getElementById('precio-nota').textContent.slice(0,28)));
 await p.evaluate(()=>document.getElementById('planes').scrollIntoView({block:'center'}));
 await p.waitForTimeout(300); await p.screenshot({path:'pl_d.png'});
 console.log('ERRORES:', errs.length?errs:'ninguno');

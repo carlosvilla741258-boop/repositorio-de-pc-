@@ -189,11 +189,6 @@ section{padding-block:var(--s8)}
   color:var(--red-lit);border-color:var(--red)}
 .cifra-det{margin:var(--s4) 0 0;font-size:14px;color:var(--muted);min-height:1.5em}
 .cifra-det b{color:var(--ink);font-weight:400}
-.tabs{display:flex;gap:var(--s1);margin-bottom:var(--s5);flex-wrap:wrap}
-.tab{font-family:var(--display);font-size:15px;letter-spacing:.1em;text-transform:uppercase;
-  padding:12px 20px;background:var(--surface);border:1px solid var(--line);color:var(--muted);
-  cursor:pointer;transition:background 130ms ease,border-color 130ms ease,color 130ms ease}
-.tab[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
 /* Columnas otra vez, pero no tres cajas iguales: la del medio es la más
    elegida y va más ancha y encendida de salida. Elegir otra le pasa el foco,
    sin apagar las demás — la gracia de las columnas es poder comparar. */
@@ -411,13 +406,8 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
     <p class="lead">Según tu presupuesto y necesidad. Los daños por choque se
       presupuestan aparte, según su gravedad.</p>
   </div>
-  <div class="tabs" role="tablist" aria-label="Tipo de vehículo">
-    <button class="tab" role="tab" aria-selected="true" data-veh="auto">Auto</button>
-    <button class="tab" role="tab" aria-selected="false" data-veh="camioneta">Camioneta</button>
-    <button class="tab" role="tab" aria-selected="false" data-veh="minivan">Minivan</button>
-  </div>
   <div class="planes" id="planes"></div>
-  <p class="note" id="veh-note"></p>
+  <p class="note" id="precio-nota"></p>
 </section>
 
 <section class="wrap" style="padding-top:0">

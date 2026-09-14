@@ -32,21 +32,20 @@ const CAPS = [
    tar:[["Pulido básico","S/ 350"],["Pulido 3 pasos","S/ 700 – 1200"],
         ["Cerámico 1 año","S/ 400 – 700"],["Cerámico 9 años","S/ 3500"]] },
  { no:"05 / 05", t:"Pintado de aros",
-   txt:"Desmontaje, decapado y pintado de las cuatro llantas en el color y acabado "+
+   txt:"Desmontaje, decapado y pintado de los cuatro aros en el color y acabado "+
        "que elijas. El detalle que cambia el carro entero.",
    tar:[["Juego de 4","A evaluar"],["Acabados","Plano · metalizado"]] }
 ];
 CAPS.forEach(function(c,i){ c.t0 = T0[i]; c.fin = FIN[i]; });
 
-/* Una matriz, no tres listas sueltas: el servicio manda la fila y el nivel de
+/* Un solo juego de precios, el de auto: el servicio manda la fila y el nivel de
    acabado la columna, que es como de verdad se comparan. */
 const PRECIOS = {
- auto:{
-  niveles:[
+ niveles:[
    {nom:"Básica",  pie:"Cuidado esencial para mantener el carro en buen estado."},
    {nom:"Media",   pie:"El equilibrio entre acabado y precio.", tag:"Más elegido"},
    {nom:"Premium", pie:"El acabado más fino, como recién salido de fábrica."}],
-  filas:[
+ filas:[
    {svc:"Pintura",  celdas:[[["Colores planos","S/ 200 – 400"]],
                             [["Tricapa","S/ 350"]],
                             [["Candy","S/ 450 – 600"]]]},
@@ -56,9 +55,7 @@ const PRECIOS = {
    {svc:"Cerámico", celdas:[[["Dura 1 año","S/ 400 – 700"]],
                             [["Dura 3 años","S/ 600 – 800"]],
                             [["Dura 5 años","S/ 1200"],["Dura 7 años","S/ 2500"],
-                             ["Dura 9 años","S/ 3500"]]]}]},
- camioneta:"Precios de camioneta: consúltanos por WhatsApp — varían según el tamaño del vehículo.",
- minivan:"Precios de minivan: por confirmar."
+                             ["Dura 9 años","S/ 3500"]]]}]
 };
 
 const $  = s => document.querySelector(s);
@@ -66,13 +63,12 @@ const $$ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 const clamp = (v,a,b) => v<a?a:(v>b?b:v);
 
 /* ── Precios ── */
-const contPlanes = $("#planes"), noteEl = $("#veh-note");
+const contPlanes = $("#planes"), noteEl = $("#precio-nota");
 const WA = "https://wa.me/51934965098";
 let nivel = 1;                       // la del medio es la más elegida
 
-function pintarPrecios(veh){
-  const d = PRECIOS[veh];
-  if (typeof d === "string"){ contPlanes.innerHTML = ""; noteEl.textContent = d; return; }
+function pintarPrecios(){
+  const d = PRECIOS;
   nivel = clamp(nivel, 0, d.niveles.length - 1);
 
   contPlanes.innerHTML = d.niveles.map(function(n,i){
@@ -86,8 +82,7 @@ function pintarPrecios(veh){
              '<small>'+pares[0][0]+'</small></span>'+
              '<span class="v">'+val+'</span></div>';
     }).join("");
-    const texto = "Hola, quiero un presupuesto de calidad " + n.nom +
-                  " para mi " + veh + ".";
+    const texto = "Hola, quiero un presupuesto de calidad " + n.nom + " para mi auto.";
     return '<div class="plan" role="button" tabindex="0" data-n="'+i+'" '+
              'aria-selected="'+(i===nivel)+'">'+
       '<div class="plan-cab"><h3>'+n.nom+'</h3>'+
@@ -113,11 +108,7 @@ function pintarPrecios(veh){
   });
   noteEl.textContent = "Precios referenciales por vehículo completo. Los daños por choque se presupuestan aparte.";
 }
-pintarPrecios("auto");
-$$(".tab").forEach(tab => tab.addEventListener("click", () => {
-  $$(".tab").forEach(t => t.setAttribute("aria-selected", String(t===tab)));
-  pintarPrecios(tab.dataset.veh);
-}));
+pintarPrecios();
 
 /* ── Escenario ── */
 /* El escenario ocupa la pantalla menos la cabecera, y la cabecera cambia de
