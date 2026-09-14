@@ -16,7 +16,10 @@
   --red:#c80018; --red-lit:#ff2d40;
   --display:"Oswald",Impact,sans-serif;
   --text:"Archivo",system-ui,-apple-system,sans-serif;
-  --s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;--s6:64px;--s7:96px;--s8:140px;
+  --s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;--s6:64px;--s7:96px;
+  /* El paso grande, fluido: en píxeles fijos el celular se comía el mismo
+     hueco negro que el escritorio, y ahí pesa un cuarto de pantalla. */
+  --s8:clamp(56px,8vw,112px);
   --gut:clamp(20px,5vw,64px);
   --tap:44px;                       /* objetivo táctil mínimo cómodo */
 }
@@ -53,13 +56,12 @@ nav a:hover,nav a:focus-visible{color:var(--ink)}
 @media(max-width:900px){nav{display:none}}
 /* A 360 px la marca y el botón no caben juntos: se compacta el botón. */
 header .btn{padding:12px 20px;font-size:13px}
-/* "Dinos tu presupuesto" es largo: en pantallas estrechas se parte en dos
-   líneas y se ajusta la marca, en vez de empujar la página a lo ancho. */
+/* Con el logo al lado, la marca y el botón no caben holgados a 360 px:
+   se compacta el botón en vez de comerse el nombre. */
 @media(max-width:560px){
   .brand{font-size:15px}
   .brand .logo{height:28px}
-  header .btn{padding:8px 12px;font-size:11px;letter-spacing:.04em;
-    white-space:normal;text-align:center;line-height:1.15}
+  header .btn{padding:10px 14px;font-size:12px;letter-spacing:.06em}
   .bar{gap:var(--s2)}
 }
 .btn{display:inline-block;font-family:var(--display);font-size:15px;letter-spacing:.08em;
@@ -140,8 +142,9 @@ video{width:100%;height:100%;object-fit:contain;display:block;background:#08080a
 
 /* ── secciones ────────────────────────────────────────────────── */
 section{padding-block:var(--s8)}
-.rule{height:1px;background:var(--line);transform-origin:left center;margin-bottom:var(--s6)}
-.two{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,6vw,96px);align-items:start}
+.rule{height:1px;background:var(--line);transform-origin:left center;margin-bottom:var(--s5)}
+.two{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,6vw,96px);
+  align-items:start;margin-bottom:var(--s5)}
 @media(max-width:860px){.two{grid-template-columns:1fr}}
 /* Tres columnas iguales no dicen cuál importa, y dos de los tres números
    estaban tapando información que sí tenemos: cuáles son los servicios y qué
@@ -149,7 +152,8 @@ section{padding-block:var(--s8)}
 .cifras{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
   border-block:1px solid var(--line)}
 @media(max-width:860px){.cifras{grid-template-columns:1fr}}
-.cifra-lead{padding:var(--s6) var(--s5) var(--s6) 0;border-right:1px solid var(--line)}
+.cifra-lead{display:flex;flex-direction:column;justify-content:center;
+  padding:var(--s6) var(--s5) var(--s6) 0;border-right:1px solid var(--line)}
 .cifra-lead .num{font-size:clamp(84px,12vw,168px);color:var(--red-lit);line-height:.8}
 .cifra-tit{font-family:var(--display);font-weight:700;text-transform:uppercase;
   font-size:clamp(22px,2.6vw,34px);line-height:1;margin:var(--s3) 0 0}
@@ -301,7 +305,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
   <a class="brand" href="#top"><!--LOGO--><span>Abarca <b>Factoría</b></span></a>
   <nav><a href="#proceso">El proceso</a><a href="#precios">Precios</a>
     <a href="#trabajos">Trabajos</a><a href="#contacto">Contacto</a></nav>
-  <a class="btn" href="https://wa.me/51934965098">Dinos tu presupuesto</a>
+  <a class="btn" href="https://wa.me/51934965098">Presupuesto</a>
 </div></header>
 
 <main id="top">
@@ -378,7 +382,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 
 <section class="wrap">
   <div class="rule"></div>
-  <div class="two" style="margin-bottom:var(--s6)">
+  <div class="two">
     <div><p class="eyebrow">Cómo empezamos</p>
       <h2>Pide tu<br>presupuesto</h2></div>
     <p class="lead">No hace falta que muevas el carro para saber cuánto cuesta.
@@ -401,7 +405,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 
 <section id="precios" class="wrap" style="padding-top:0">
   <div class="rule"></div>
-  <div class="two" style="margin-bottom:var(--s6)">
+  <div class="two">
     <div><p class="eyebrow">Precios referenciales</p>
       <h2>Elige el nivel<br>de acabado</h2></div>
     <p class="lead">Según tu presupuesto y necesidad. Los daños por choque se
@@ -434,7 +438,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 
 <section id="trabajos" class="wrap" style="padding-top:0">
   <div class="rule"></div>
-  <div class="two" style="margin-bottom:var(--s6)">
+  <div class="two">
     <div><p class="eyebrow">Galería</p><h2>Nuestros trabajos</h2></div>
     <p class="lead">Arrastra el control para comparar el antes y el después.</p>
   </div>
@@ -457,7 +461,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 
 <section id="contacto" class="wrap" style="padding-top:0">
   <div class="rule"></div>
-  <div class="two" style="margin-bottom:var(--s6)">
+  <div class="two">
     <div><p class="eyebrow">Contacto</p><h2>Escríbenos<br>o visítanos</h2></div>
     <p class="lead">Atendemos de lunes a sábado. Para un presupuesto rápido,
       mándanos una foto del daño por WhatsApp.</p>
