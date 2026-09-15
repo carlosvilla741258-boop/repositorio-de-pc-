@@ -1,0 +1,30 @@
+{
+  "nombre": "Proforma-ABARCA-Nissan-BUX-222",
+  "titulo": "Proforma Nissan BUX-222",
+  "fecha": "15/09/2026",
+  "cliente": "",
+  "doc": "",
+  "tel": "",
+  "marca": "NISSAN",
+  "modelo": "",
+  "tipo": "CARROZA FÚNEBRE",
+  "placa": "BUX-222",
+  "color": "NEGRO",
+  "bloques": [
+    {
+      "t": "SERVICIO DE PINTURA:",
+      "items": [
+        {
+          "d": "Pintura de panel izquierdo",
+          "m": 600
+        }
+      ]
+    }
+  ],
+  "notas": [
+    "TRABAJO A REALIZAR EN 2 A 4 DÍAS HÁBILES.",
+    "Todo presupuesto con factura se aplica más el 18% de IGV."
+  ],
+  "igv": 0.18,
+  "adelanto": null
+}

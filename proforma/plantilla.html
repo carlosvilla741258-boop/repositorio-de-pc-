@@ -1,0 +1,406 @@
+<title>__TITULO__</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    color-scheme:only light;
+    --ground:#E9E5E1; --paper:#FFFFFF; --ink:#1B1917; --muted:#6E6660;
+    --rule:#D9D3CD; --fill:#EFEBE7; --bar:#17150F; --bar-ink:#FFFFFF;
+    --brand:#CE111A; --field:#FAF7F4; --field-line:#CFC7C0;
+    --shadow:0 1px 2px rgba(23,21,15,.07), 0 14px 34px rgba(23,21,15,.11);
+    --sans:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    --cond:"Barlow Condensed","IBM Plex Sans",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  *{box-sizing:border-box}
+  html{background:var(--ground)}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  .wrap{padding:20px 16px 64px;max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+
+  /* ---------- barra de acciones ---------- */
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .bar .who{font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.09em;
+            text-transform:uppercase;color:var(--muted);margin-right:auto}
+  .bar .who b{color:var(--brand);font-weight:700}
+  button{font-family:var(--sans);font-size:13.5px;font-weight:500;color:var(--ink);
+         background:transparent;border:1px solid var(--field-line);border-radius:6px;
+         padding:8px 13px;cursor:pointer;transition:background .15s,border-color .15s}
+  button:hover:not(:disabled){background:var(--fill);border-color:var(--muted)}
+  button.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+  button.primary:hover:not(:disabled){background:var(--brand);filter:brightness(1.08)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button:focus-visible,[contenteditable]:focus-visible,input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+  .note{font-size:12.5px;color:var(--muted);margin:0;flex-basis:100%}
+  .note.ok{color:var(--brand);font-weight:500}
+
+  /* ---------- la hoja ---------- */
+  .sheet{background:var(--paper);box-shadow:var(--shadow);border-radius:3px;
+         padding:38px 40px 46px;display:flex;flex-direction:column;gap:18px}
+
+  .head{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+  .head img{width:72px;height:auto;display:block}
+  .name{font-family:var(--cond);font-weight:700;font-size:46px;line-height:.92;
+        letter-spacing:.005em;text-transform:uppercase;
+        border-bottom:2.5px solid var(--brand);padding-bottom:3px;margin:0}
+  .tag{font-size:13px;color:var(--muted);margin:5px 0 0}
+  .rucbox{border:1.5px solid var(--brand);border-radius:2px;min-width:224px;overflow:hidden}
+  .rucbox .ruc{background:var(--brand);color:#fff;font-family:var(--mono);font-weight:600;
+               font-size:15px;text-align:center;padding:7px 10px;letter-spacing:.01em}
+  .rucbox .kind{font-family:var(--cond);font-weight:700;font-size:23px;letter-spacing:.12em;
+                text-transform:uppercase;text-align:center;padding:5px 10px}
+
+  .locales{display:flex;flex-direction:column;gap:3px;font-size:13px}
+  .locales p{margin:0;display:flex;gap:9px;align-items:baseline}
+  .locales .dot{color:var(--brand);font-size:9px;line-height:1.7;flex:none}
+  .locales b{font-weight:600}
+  .locales span.v{color:var(--muted)}
+
+  .servicios{border:1px solid var(--rule);border-radius:2px;padding:9px 14px;text-align:center;
+             font-size:12.5px;color:var(--muted);line-height:1.6}
+  .servicios i{font-style:normal;color:var(--field-line);padding:0 5px}
+
+  .barlabel{background:var(--bar);color:var(--bar-ink);font-family:var(--cond);font-weight:600;
+            font-size:16px;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px}
+  .barlabel.center{text-align:center}
+
+  /* rejillas de datos */
+  .grid{display:grid;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+  .grid>div{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
+            min-width:0;display:flex;align-items:center}
+  .grid>.k{background:var(--fill);font-family:var(--cond);font-weight:600;font-size:15px;
+           letter-spacing:.09em;text-transform:uppercase;padding:7px 11px;white-space:nowrap}
+  .grid.cli{grid-template-columns:max-content 1fr}
+  .grid.veh{grid-template-columns:max-content 1fr max-content 1fr}
+  .grid .v.wide{grid-column:span 3}
+
+  input{font:inherit;color:inherit;background:transparent;border:0;width:100%;
+        padding:7px 11px;border-radius:0;min-width:0}
+  input::placeholder{color:var(--field-line)}
+  .sheet input:not([readonly]){background:var(--field);box-shadow:inset 0 -1px 0 var(--field-line)}
+  .sheet input:not([readonly]):focus{background:var(--fill);outline:none;box-shadow:inset 0 -2px 0 var(--brand)}
+
+  /* detalle: un solo recuadro; el espacio en blanco se respeta */
+  .desc{border:1px solid var(--rule);padding:13px 15px 15px;
+        display:flex;flex-direction:column;min-height:300px}
+  .desc h3{font-size:13px;font-weight:600;margin:0 0 8px;text-decoration:underline;
+           text-underline-offset:3px;text-decoration-thickness:1px}
+  .desc .bq+.bq{margin-top:14px}
+  .lin{width:100%;border-collapse:collapse;font-size:12.5px}
+  .lin th{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.09em;
+          text-transform:uppercase;color:var(--muted);text-align:left;
+          padding:0 7px 4px;border-bottom:1px solid var(--rule)}
+  .lin td{padding:5px 7px;vertical-align:top;line-height:1.45}
+  .lin .n{width:30px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11.5px}
+  .lin .c{width:100px;text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .lin .x{width:22px;text-align:right}
+  .lin .x button{border:0;background:none;padding:0 2px;font-size:13px;line-height:1;color:var(--field-line)}
+  .lin .x button:hover{color:var(--brand);background:none}
+  .desc .add{margin:9px 0 0;align-self:flex-start;font-size:11.5px;padding:2px 8px;
+             color:var(--muted);border-radius:5px}
+
+  /* pie del recuadro: notas a la izquierda, importes abajo a la derecha */
+  .pie{margin-top:auto;padding-top:20px;display:grid;grid-template-columns:1fr auto;
+       gap:26px;align-items:end}
+  .notas p{margin:0 0 3px;font-size:10.5px;line-height:1.45}
+  .notas p.fina{font-size:9.5px;color:var(--muted)}
+  .tot{min-width:236px}
+  .tot .r{display:grid;grid-template-columns:1fr auto;gap:16px;padding:2px 0;align-items:baseline}
+  .tot .r span{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.08em;
+               text-transform:uppercase;color:var(--muted)}
+  .tot .r b{font-family:var(--mono);font-weight:500;font-size:12.5px;
+            font-variant-numeric:tabular-nums}
+  .tot .r.total{border-top:1px solid var(--ink);margin-top:5px;padding-top:6px}
+  .tot .r.total span{color:var(--ink);font-size:14px}
+  .tot .r.total b{font-weight:600;font-size:14.5px;color:var(--brand)}
+  .sheet [contenteditable]{background:var(--field);box-shadow:inset 0 -1px 0 var(--field-line)}
+  .sheet [contenteditable]:focus{background:var(--fill);outline:none;
+          box-shadow:inset 0 -2px 0 var(--brand)}
+
+  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:44px}
+  .firmas div{border-top:1px solid var(--field-line);padding-top:7px;text-align:center;
+              font-size:12px;color:var(--muted)}
+
+  @media print{
+    @page{size:A4;margin:12mm}
+    body{background:#fff;color:#000}
+    .bar{display:none !important}
+    .wrap{padding:0;max-width:none;gap:0}
+    .sheet{box-shadow:none;padding:0;border-radius:0;background:#fff;gap:14px;
+           zoom:1 !important;width:auto !important}
+    .firmas{margin-top:20px;break-inside:avoid}
+    .sheet input{background:none !important;box-shadow:none !important;padding:6px 10px}
+    .lin .x,.desc .add{display:none !important}
+    .sheet [contenteditable]{background:none !important;box-shadow:none !important}
+    .sheet input::placeholder{color:transparent}
+    .barlabel,.rucbox .ruc,.grid>.k,.totales .row.total{
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+
+<div class="wrap">
+  <div class="bar" id="bar">
+    <div class="who"><b>Abarca</b> · proforma editable</div>
+    <button id="print" type="button">Imprimir / PDF</button>
+    <button id="save" class="primary" type="button">Guardar</button>
+    <p class="note" id="note">Escribe directo sobre la hoja. <b>Guardar</b> deja los cambios para todos los que abran este link.</p>
+  </div>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script type="application/json" id="state">__STATE__</script>
+<script>
+(function(){
+  "use strict";
+  var PRISTINE = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+  var S = JSON.parse(document.getElementById("state").textContent);
+  var sheet = document.getElementById("sheet");
+  var note  = document.getElementById("note");
+  var nf = new Intl.NumberFormat("es-PE",{minimumFractionDigits:2,maximumFractionDigits:2});
+  var money = function(n){ return nf.format(isFinite(n) ? n : 0); };
+  var num = function(t){ var v = parseFloat(String(t).replace(/[^0-9.,-]/g,"").replace(/,/g,"")); return isFinite(v)?v:0; };
+  var esc = function(t){ return String(t==null?"":t).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+
+  var canWrite = false, dirty = false;
+
+  function field(key, ph){
+    return '<input id="f-'+key+'" data-k="'+key+'" value="'+esc(S[key])+'" placeholder="'+esc(ph||"")+'" autocomplete="off">';
+  }
+
+  function render(){
+    sheet.innerHTML =
+    '<div class="head">'+
+      '<img src="data:image/png;base64,__LOGO__" alt="Logotipo de ABARCA">'+
+      '<div>'+
+        '<h1 class="name">Abarca</h1>'+
+        '<p class="tag">Calidad, nuestra especialidad</p>'+
+      '</div>'+
+      '<div class="rucbox"><div class="ruc">RUC: 20612357421</div><div class="kind">Proforma</div></div>'+
+    '</div>'+
+
+    '<div class="locales">'+
+      '<p><span class="dot">&#9679;</span><span><b>Local Zárate:</b> <span class="v">Jirón Santa Mónica 635 &ndash; SJL</span></span></p>'+
+      '<p><span class="dot">&#9679;</span><span><b>Local Santa Rosa:</b> <span class="v">Av. Santa Rosa Lt. 3 Mz. U, Urb. Semirústica Cerro Grande &ndash; SJL</span></span></p>'+
+      '<p><span class="dot">&#9679;</span><span><b>Teléfono:</b> <span class="v">+51 934 965 098 &nbsp;/&nbsp; +51 973 219 397</span></span></p>'+
+    '</div>'+
+
+    '<div class="servicios">Reparación de carrocería <i>|</i> Reparación de fibra de vidrio <i>|</i> Reconstrucción <i>|</i> Desabolladura<br>'+
+      'Reparación de rayones <i>|</i> Enderezado de chasis <i>|</i> Modificaciones, entre otros.</div>'+
+
+    '<div class="grid cli">'+
+      '<div class="k">Fecha</div><div class="v">'+field("fecha","dd/mm/aaaa")+'</div>'+
+      '<div class="k">Cliente</div><div class="v">'+field("cliente","Nombre / razón social")+'</div>'+
+      '<div class="k">DNI / RUC</div><div class="v">'+field("doc","")+'</div>'+
+      '<div class="k">Teléfono</div><div class="v">'+field("tel","")+'</div>'+
+    '</div>'+
+
+    '<div>'+
+      '<div class="barlabel center">Datos del vehículo</div>'+
+      '<div class="grid veh">'+
+        '<div class="k">Marca</div><div class="v">'+field("marca","")+'</div>'+
+        '<div class="k">Modelo</div><div class="v">'+field("modelo","")+'</div>'+
+        '<div class="k">Tipo</div><div class="v">'+field("tipo","")+'</div>'+
+        '<div class="k">Placa</div><div class="v">'+field("placa","A0A-000")+'</div>'+
+        '<div class="k">Color</div><div class="v wide">'+field("color","")+'</div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div>'+
+      '<div class="barlabel">Descripción</div>'+
+      '<div class="desc">'+cajasHTML()+'</div>'+
+    '</div>'+
+
+    '<div class="firmas"><div>Abarca &ndash; Calidad, nuestra especialidad</div><div>Conformidad del cliente</div></div>';
+
+    if(!canWrite){
+      var ins = sheet.querySelectorAll("input");
+      for(var i=0;i<ins.length;i++){ ins[i].setAttribute("readonly",""); }
+    }
+  }
+
+  function sum(){
+    return S.bloques.reduce(function(a, b){
+      return a + b.items.reduce(function(x, it){ return x + num(it.m); }, 0);
+    }, 0);
+  }
+  function rate(){ return num(S.igv); }
+
+  // un importe se escribe como en la hoja: 600, 1,250.50
+  function imp(n){
+    n = num(n);
+    return n % 1 === 0 ? new Intl.NumberFormat("es-PE").format(n) : money(n);
+  }
+  var ed = function(cls, attrs, txt){
+    return '<span class="'+cls+'"'+(canWrite ? ' contenteditable="plaintext-only"' : '')+
+           ' '+attrs+'>'+esc(txt)+'</span>';
+  };
+
+  function cajasHTML(){
+    var cuerpo = S.bloques.filter(function(b){ return b.items.length; }).map(function(b, k){
+      var bi = S.bloques.indexOf(b);
+      var filas = b.items.map(function(it, i){
+        return '<tr>'+
+          '<td class="n">'+(i+1)+'</td>'+
+          '<td>'+ed("", 'data-b="'+bi+'" data-i="'+i+'" data-f="d"', it.d)+'</td>'+
+          '<td class="c">'+ed("m", 'data-b="'+bi+'" data-i="'+i+'" data-f="m"', imp(it.m))+'</td>'+
+          '<td class="x">'+(canWrite ? '<button type="button" data-del="'+bi+':'+i+'" aria-label="Quitar linea">&times;</button>' : '')+'</td>'+
+        '</tr>';
+      }).join("");
+      return '<div class="bq">'+
+        '<h3>'+ed("", 'data-t="'+bi+'"', b.t)+'</h3>'+
+        '<table class="lin"><thead><tr>'+
+          '<th class="n">N°</th><th>Trabajo por realizar</th>'+
+          '<th class="c">Coste S/</th><th class="x"></th>'+
+        '</tr></thead><tbody>'+filas+'</tbody></table>'+
+      '</div>';
+    }).join("");
+
+    var vacio = S.bloques.filter(function(b){ return !b.items.length; })[0];
+    var agregar = canWrite
+      ? '<button type="button" class="add" data-add="'+S.bloques.indexOf(vacio !== undefined ? vacio : S.bloques[0])+'">+ agregar</button>'
+      : "";
+
+    var notas = (S.notas || []).map(function(nt, ni){
+      return '<p class="'+(ni ? "fina" : "")+'">***'+ed("", 'data-n="'+ni+'"', nt)+'</p>';
+    }).join("");
+
+    return cuerpo + agregar +
+      '<div class="pie">'+
+        '<div class="notas">'+notas+'</div>'+
+        '<div class="tot">'+totalesHTML()+'</div>'+
+      '</div>';
+  }
+
+  function totalesHTML(){
+    var st = sum(), r = rate(), igv = st * r, tot = st + igv, h = "";
+    if(r > 0){
+      h += '<div class="r"><span>Subtotal</span><b id="subtotal">S/ '+money(st)+'</b></div>';
+      h += '<div class="r"><span>IGV ('+(r*100).toFixed(0)+'%)</span><b id="igv">S/ '+money(igv)+'</b></div>';
+    }
+    h += '<div class="r total"><span>Total</span><b id="total">S/ '+money(tot)+'</b></div>';
+    return h;
+  }
+
+  function totals(){
+    var st = sum(), r = rate(), igv = st * r, tot = st + igv;
+    var put = function(id, v){ var e = document.getElementById(id); if(e) e.textContent = "S/ " + money(v); };
+    put("subtotal", st); put("igv", igv); put("total", tot);
+  }
+
+  function touched(){
+    dirty = true;
+    if(canWrite){ note.className = "note"; note.innerHTML = "Cambios sin guardar. Pulsa <b>Guardar</b> para que queden en el link."; }
+  }
+
+  sheet.addEventListener("input", function(e){
+    var el = e.target, d = el.dataset;
+    if(el.tagName === "INPUT"){
+      if(d.k) S[d.k] = d.k === "adelanto" ? num(el.value) : el.value;
+    } else if(d.b !== undefined){
+      var it = S.bloques[+d.b].items[+d.i];
+      if(d.f === "m") it.m = num(el.textContent); else it.d = el.textContent;
+    } else if(d.t !== undefined){
+      S.bloques[+d.t].t = el.textContent;
+    } else if(d.n !== undefined){
+      S.notas[+d.n] = el.textContent;
+    } else return;
+    totals();
+    touched();
+  });
+
+  sheet.addEventListener("blur", function(e){
+    var el = e.target;
+    if(el.tagName === "INPUT" && el.dataset.k === "adelanto") el.value = money(num(el.value));
+    if(el.dataset && el.dataset.f === "m") el.textContent = imp(el.textContent);
+  }, true);
+
+  sheet.addEventListener("click", function(e){
+    if(!canWrite || !e.target.closest) return;
+    var q = e.target.closest("[data-del]");
+    if(q){
+      var p = q.getAttribute("data-del").split(":");
+      S.bloques[+p[0]].items.splice(+p[1], 1);
+      render(); ajustar(); touched(); return;
+    }
+    var a = e.target.closest("[data-add]");
+    if(a){
+      var bi = +a.getAttribute("data-add");
+      S.bloques[bi].items.push({d:"", m:0});
+      render(); ajustar(); touched();
+      var nuevos = sheet.querySelectorAll('[data-b="'+bi+'"][data-f="d"]');
+      if(nuevos.length) nuevos[nuevos.length-1].focus();
+    }
+  });
+
+  document.getElementById("print").addEventListener("click", function(){ window.print(); });
+
+  var saveBtn = document.getElementById("save");
+  saveBtn.disabled = true;
+
+  saveBtn.addEventListener("click", function(){
+    if(!canWrite) return;
+    saveBtn.disabled = true;
+    note.className = "note"; note.textContent = "Guardando…";
+    var json = JSON.stringify(S).replace(/</g, "\\u003c");
+    var mark = /(<script type="application\/json" id="state">)[\s\S]*?(<\/script>)/;
+    if(!mark.test(PRISTINE)){
+      note.className = "note";
+      note.textContent = "No se pudo preparar el guardado. Usa Imprimir / PDF para conservar esta versión.";
+      saveBtn.disabled = false; return;
+    }
+    var html = PRISTINE.replace(mark, function(_, a, b){ return a + json + b; });
+    claude.use("artifact").then(function(api){ return api.publish(html); }).then(function(){
+      dirty = false;
+      note.className = "note ok"; note.textContent = "Guardado. Quien abra el link verá esta versión.";
+      saveBtn.disabled = false;
+    }).catch(function(err){
+      var code = err && err.code;
+      note.className = "note";
+      note.textContent = code === "conflict"
+        ? "Otra persona guardó primero; la hoja se recargará con su versión."
+        : "No se pudo guardar (" + (code || "error") + "). Tus cambios siguen en pantalla: puedes usar Imprimir / PDF.";
+      saveBtn.disabled = false;
+    });
+  });
+
+  window.addEventListener("beforeunload", function(e){ if(dirty){ e.preventDefault(); e.returnValue = ""; } });
+
+  var DISENO = 760;   // ancho de la hoja, en el que el tablero se ve completo
+  function ajustar(){
+    var wrap = document.querySelector(".wrap");
+    if(!wrap) return;
+    var cs = getComputedStyle(wrap);
+    var libre = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    if(libre > 0 && libre < DISENO){
+      sheet.style.width = DISENO + "px";
+      sheet.style.zoom = libre / DISENO;
+    } else {
+      sheet.style.width = "";
+      sheet.style.zoom = "";
+    }
+  }
+  window.addEventListener("resize", ajustar);
+
+  render();
+  ajustar();
+
+  if(window.claude && claude.use){
+    claude.use("artifact").then(function(api){
+      if(!api) return;
+      canWrite = true;
+      saveBtn.disabled = false;
+      var ins = sheet.querySelectorAll("input[readonly]");
+      for(var i=0;i<ins.length;i++){ ins[i].removeAttribute("readonly"); }
+    });
+  }
+  setTimeout(function(){
+    if(!canWrite){
+      note.className = "note";
+      note.textContent = "Solo lectura: puedes verla e imprimirla, pero no guardar cambios en este link.";
+    }
+  }, 10500);
+})();
+</script>

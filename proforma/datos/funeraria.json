@@ -1,0 +1,50 @@
+{
+  "nombre": "Proforma-ABARCA-Funeraria-Integral-BUX-222",
+  "titulo": "Proforma Funeraria Integral",
+  "fecha": "15/09/2026",
+  "cliente": "SERVICIOS FUNERARIA INTEGRAL",
+  "doc": "",
+  "tel": "",
+  "marca": "NISSAN",
+  "modelo": "",
+  "tipo": "CARROZA FÚNEBRE",
+  "placa": "BUX-222",
+  "color": "NEGRO",
+  "bloques": [
+    {
+      "t": "SERVICIOS A REALIZAR:",
+      "items": [
+        {
+          "d": "Planchado de estribo izquierdo posterior",
+          "m": 200
+        },
+        {
+          "d": "Pintado de estribo izquierdo posterior",
+          "m": 500
+        },
+        {
+          "d": "Encuadre de parachoques delantero derecho",
+          "m": 20
+        },
+        {
+          "d": "Pintado de parachoques delantero derecho",
+          "m": 200
+        },
+        {
+          "d": "Pintado de panel posterior derecho",
+          "m": 500
+        },
+        {
+          "d": "Pintado de parachoques posterior",
+          "m": 200
+        }
+      ]
+    }
+  ],
+  "notas": [
+    "TRABAJO A REALIZAR EN 2 A 4 DÍAS HÁBILES.",
+    "Todo presupuesto con factura se aplica más el 18% de IGV."
+  ],
+  "igv": 0,
+  "adelanto": null
+}
