@@ -21,7 +21,7 @@ const CAPS = [
  { no:"02 / 05", t:"Planchado y enderezado",
    txt:"Reparación de abolladuras y corrección de estructura y chasis afectados por "+
        "golpes. Devolvemos la forma antes de tocar la pintura.",
-   tar:[["Desde","S/ 80"],["Por choque","A evaluar"]] },
+   tar:[["Desde","S/ 100"],["Por choque","A evaluar"]] },
  { no:"03 / 05", t:"Pintura",
    txt:"Bajamos a fondo y aplicamos el acabado que elijas. Tres niveles, del color "+
        "plano al candy.",
