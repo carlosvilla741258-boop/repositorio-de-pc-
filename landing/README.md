@@ -99,3 +99,40 @@ columnas y se pierde la comparación de un vistazo.
 
 El botón de cada columna abre WhatsApp con el mensaje ya escrito, nombrando el
 nivel y el tipo de vehículo elegidos.
+
+## Los otros dos antes/después
+
+`carro-antes.jpg` / `carro-despues.jpg` (832×520) y `aro-antes.jpg` /
+`aro-despues.jpg` (1040×650) salen de `fotos/n1..n4.jpg`, los originales tal
+como llegaron.
+
+**Los aros** se alinearon por el buje: (710, 560) en la del antes y (910, 536)
+en la del después, con los dos aros midiendo casi lo mismo —934 contra 940 px
+de alto, medio por ciento— así que bastó desplazar el encuadre. Los radios no
+calzan porque el aro giró entre foto y foto; se midió el giro por correlación
+angular y por solapamiento de las ventanas oscuras, y ninguna rotación lo
+arregla: las dos fotos tienen perspectivas distintas y el aro sale elíptico de
+forma diferente en cada una. En el barrido apenas se nota, porque lo que
+continúa de un lado al otro es el borde del neumático y el buje.
+
+**El carro** no admite alineación píxel a píxel: una foto está tomada de cerca
+con el carro cortado y en caballetes, la otra entera y en vertical. Se midieron
+dos puntos presentes en ambas —el espejo retrovisor y el centro de la rueda
+delantera— y salió que el carro se ve exactamente 3 veces más grande en la del
+antes (718 px contra 240 entre esos dos puntos). Con esa razón se eligieron
+ventanas de 1560×975 y 520×325, que dejan la misma esquina del carro —puerta,
+aleta y rueda delantera— al mismo tamaño en las dos.
+
+La galería pasó de una fila a una pila: cada trabajo es un `.trabajo-par` con
+su comparador y su nota, separados por un filete.
+
+### Dos cosas que hay que respetar al tocar esto
+
+`.gallery` y `.trabajo-par` usan `minmax(0,…)` y no `1fr` a secas: una pista de
+rejilla se niega a bajar del ancho mínimo de su contenido, y el texto estiraba
+la columna.
+
+La página **necesita su `<meta name="viewport">`**. Sin ella, un celular abre
+la página con un lienzo de 980 px y la enseña alejada. No se nota al publicarla
+como artefacto porque la plataforma añade esa etiqueta por su cuenta, pero el
+archivo suelto —el que va a un hosting— sí la necesita.

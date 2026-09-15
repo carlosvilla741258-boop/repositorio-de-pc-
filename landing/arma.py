@@ -29,6 +29,9 @@ else:
 html = html.replace("__POSTER__",  uri("g960.jpg",   "image/jpeg"))
 html = html.replace("__ANTES__",   uri("antes.jpg",  "image/jpeg"))
 html = html.replace("__DESPUES__", uri("despues.jpg","image/jpeg"))
+for marca, arch in (("__CARRO_ANTES__","carro-antes.jpg"), ("__CARRO_DESPUES__","carro-despues.jpg"),
+                    ("__ARO_ANTES__","aro-antes.jpg"),     ("__ARO_DESPUES__","aro-despues.jpg")):
+    html = html.replace(marca, uri(arch, "image/jpeg"))
 html = html.replace("<!--FUENTES-->", fuentes)
 html = html.replace("<!--JS-->", app)
 open("landing.html","w",encoding="utf-8").write(html)

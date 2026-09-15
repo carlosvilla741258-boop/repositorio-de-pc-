@@ -1,4 +1,5 @@
 <title>Abarca Factoría</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Planchado, pintura, pulido, cerámico y pintado de aros en San Juan de Lurigancho, Lima. Mira en video lo que le hacemos a tu carro.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,8 +249,13 @@ section{padding-block:var(--s8)}
   background:rgba(12,12,14,.82);padding:4px 8px;color:var(--ink);pointer-events:none}
 .ba .tag.l{left:var(--s3)} .ba .tag.r{right:var(--s3)}
 .ba-hint{font-size:13px;color:var(--muted);margin-top:var(--s3)}
-.gallery{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
-@media(max-width:760px){.gallery{grid-template-columns:1fr;gap:var(--s5)}}
+.gallery{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+.trabajo-par{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  gap:clamp(24px,4vw,64px);align-items:center}
+/* Un filete entre trabajos: se leen como tres encargos distintos y no como
+   un bloque corrido. */
+.trabajo-par+.trabajo-par{border-top:1px solid var(--line);padding-top:var(--s6)}
+@media(max-width:760px){.trabajo-par{grid-template-columns:minmax(0,1fr);gap:var(--s5)}}
 .trabajo h3{font-family:var(--display);text-transform:uppercase;font-size:clamp(20px,2.4vw,28px);
   line-height:1.05;margin:0 0 var(--s3)}
 .trabajo p{color:var(--muted);max-width:44ch;margin:0 0 var(--s4)}
@@ -433,19 +439,45 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
     <p class="lead">Arrastra el control para comparar el antes y el después.</p>
   </div>
   <div class="gallery">
-    <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
-        aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-      <img draggable="false" class="after" src="__DESPUES__" alt="El mismo carro terminado, pintado de rojo">
-      <img draggable="false" class="before" src="__ANTES__" alt="El carro en lámina y masilla, antes de pintarlo">
-      <span class="tag l">Antes</span><span class="tag r">Después</span>
-      <div class="divider"></div><div class="knob">◂▸</div></div>
-      <p class="ba-hint">Las dos fotos están tomadas desde el mismo punto: al arrastrar,
-        el carro no se mueve — sólo cambia.</p></div>
-    <div class="trabajo">
-      <h3>Carrocería completa<br>y pintura</h3>
-      <p>Llegó con la carrocería picada y parchada, bajada a lámina por todo el
-        lateral y el capó. Se enderezó, se emparejó y se pintó completo.</p>
-      <a class="btn ghost" href="https://wa.me/51934965098">Consulta por el tuyo</a></div>
+    <article class="trabajo-par">
+      <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img draggable="false" class="after" src="__DESPUES__" alt="El mismo carro terminado, pintado de rojo">
+        <img draggable="false" class="before" src="__ANTES__" alt="El carro en lámina y masilla, antes de pintarlo">
+        <span class="tag l">Antes</span><span class="tag r">Después</span>
+        <div class="divider"></div><div class="knob">◂▸</div></div>
+        <p class="ba-hint">Las dos fotos están tomadas desde el mismo punto: al arrastrar, el carro no se mueve — sólo cambia.</p></div>
+      <div class="trabajo">
+        <h3>Carrocería completa<br>y pintura</h3>
+        <p>Llegó con la carrocería picada y parchada, bajada a lámina por todo el lateral y el capó. Se enderezó, se emparejó y se pintó completo.</p>
+        <a class="btn ghost" href="https://wa.me/51934965098">Consulta por el tuyo</a></div>
+    </article>
+    <article class="trabajo-par">
+      <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img draggable="false" class="after" src="__CARRO_DESPUES__" alt="La misma esquina del carro terminada, en negro brillante y con el aro dorado puesto">
+        <img draggable="false" class="before" src="__CARRO_ANTES__" alt="La misma esquina del carro en masilla y enmascarada, sobre caballetes y sin la rueda">
+        <span class="tag l">Antes</span><span class="tag r">Después</span>
+        <div class="divider"></div><div class="knob">◂▸</div></div>
+        <p class="ba-hint">La misma esquina en los dos lados: puerta, aleta y rueda delantera.</p></div>
+      <div class="trabajo">
+        <h3>Del fondo gris<br>al negro</h3>
+        <p>Entró desarmado y en caballetes: lijado a fondo, masillado y enmascarado pieza por pieza. Salió en negro, con los aros a juego.</p>
+        <a class="btn ghost" href="https://wa.me/51934965098">Consulta por el tuyo</a></div>
+    </article>
+    <article class="trabajo-par">
+      <div><div class="ba" data-ba tabindex="0" role="slider" aria-label="Comparador antes y después"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img draggable="false" class="after" src="__ARO_DESPUES__" alt="El mismo aro terminado, pintado en dorado brillante">
+        <img draggable="false" class="before" src="__ARO_ANTES__" alt="El aro decapado hasta el metal, con restos de óxido y sin pintura">
+        <span class="tag l">Antes</span><span class="tag r">Después</span>
+        <div class="divider"></div><div class="knob">◂▸</div></div>
+        <p class="ba-hint">El mismo aro, antes y después: decapado hasta el metal y terminado en dorado.</p></div>
+      <div class="trabajo">
+        <h3>Pintado<br>de aros</h3>
+        <p>Se desmontan, se decapan hasta dejar el metal limpio y se pintan en el color y acabado que elijas. Estos salieron en dorado.</p>
+        <a class="btn ghost" href="https://wa.me/51934965098">Consulta por el tuyo</a></div>
+    </article>
   </div>
 </section>
 
