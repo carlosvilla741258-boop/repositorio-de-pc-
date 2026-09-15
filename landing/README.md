@@ -136,3 +136,40 @@ La página **necesita su `<meta name="viewport">`**. Sin ella, un celular abre
 la página con un lienzo de 980 px y la enseña alejada. No se nota al publicarla
 como artefacto porque la plataforma añade esa etiqueta por su cuenta, pero el
 archivo suelto —el que va a un hosting— sí la necesita.
+
+## Subirla a un hosting
+
+`python3 arma.py` deja en `web/` los tres archivos que se suben:
+
+    index.html      la página, con las fotos y el logo dentro (0,7 MB)
+    proceso.mp4     el video (2,5 MB)
+    proceso.webm    el mismo video, más liviano (2,0 MB)
+
+**Se llama `index.html` a propósito**: un hosting sirve ese nombre como página
+principal del dominio. Con cualquier otro, la dirección raíz no encuentra nada.
+
+**El video va suelto y las imágenes dentro.** Safari —iPhone, iPad y Mac— no
+reproduce video incrustado en un data URI porque necesita pedirlo por trozos
+(peticiones `Range`), y un data URI no lo permite. Las imágenes no tienen ese
+problema y pesan poco, así que se quedan dentro del HTML: no hay forma de que
+falte ninguna al subir.
+
+El hosting tiene que responder a las peticiones `Range` — cualquiera normal lo
+hace. `serv.py` levanta uno de prueba que sí las sirve, para comprobarlo antes:
+
+    python3 serv.py 8750 web
+    node pruebaweb.mjs        # los seis capítulos, los tres comparadores, las imágenes
+    node comparar.mjs         # capturas de las dos versiones lado a lado
+
+### Dos etiquetas que el archivo suelto necesita y el artefacto regala
+
+Publicando como artefacto, la plataforma añade `<meta charset>` y
+`<meta name="viewport">` por su cuenta, así que su falta no se nota ahí. En un
+hosting sí:
+
+- **Sin `charset`** el navegador supone una codificación antigua y parte todos
+  los acentos y las eñes: "FACTORÃA", "DESPUÃ©S", "daÃ±o". Va la primera de
+  todas, porque la decisión se toma leyendo el primer kilobyte.
+- **Sin `viewport`** el celular maqueta a 980 px y enseña la página alejada.
+
+Las dos salieron sirviendo el paquete de verdad, no revisando el código.

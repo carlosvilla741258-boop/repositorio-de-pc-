@@ -36,3 +36,22 @@ html = html.replace("<!--FUENTES-->", fuentes)
 html = html.replace("<!--JS-->", app)
 open("landing.html","w",encoding="utf-8").write(html)
 print("landing.html  %.2f MB" % (os.path.getsize("landing.html")/1048576))
+
+# ── paquete para subir a un hosting (Vercel, Hostinger, el que sea) ─────
+# Igual que landing.html salvo en una cosa: el video va en archivos sueltos.
+# Safari —iPhone, iPad y Mac— no reproduce video incrustado en un data URI,
+# porque para arrancar necesita pedirlo por trozos y un data URI no lo
+# permite. Las imágenes sí se quedan dentro: pesan poco y así no hay forma
+# de que falte ninguna al subirlas.
+import shutil
+os.makedirs("web", exist_ok=True)
+web = html.replace(fuentes,
+    '<source src="proceso.mp4" type="video/mp4">'
+    '<source src="proceso.webm" type="video/webm">')
+open("web/index.html", "w", encoding="utf-8").write(web)
+for orig, dest in (("g960.mp4","web/proceso.mp4"), ("g960.webm","web/proceso.webm")):
+    shutil.copyfile(orig, dest)
+print("web/  -> index.html %.2f MB  +  proceso.mp4 %.1f MB  +  proceso.webm %.1f MB"
+      % (os.path.getsize("web/index.html")/1048576,
+         os.path.getsize("web/proceso.mp4")/1048576,
+         os.path.getsize("web/proceso.webm")/1048576))
