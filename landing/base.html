@@ -23,6 +23,7 @@
   --s8:clamp(56px,8vw,112px);
   --gut:clamp(20px,5vw,64px);
   --tap:44px;                       /* objetivo táctil mínimo cómodo */
+  --sep-gal:clamp(20px,2.4vw,32px); /* aire a cada lado del filete de la galería */
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -249,12 +250,14 @@ section{padding-block:var(--s8)}
   background:rgba(12,12,14,.82);padding:4px 8px;color:var(--ink);pointer-events:none}
 .ba .tag.l{left:var(--s3)} .ba .tag.r{right:var(--s3)}
 .ba-hint{font-size:13px;color:var(--muted);margin-top:var(--s3)}
-.gallery{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+ /* El aire alrededor del filete, fluido y a los dos lados por igual: en
+   píxeles fijos el celular se comía la misma separación que el escritorio. */
+.gallery{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--sep-gal)}
 .trabajo-par{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
   gap:clamp(24px,4vw,64px);align-items:center}
 /* Un filete entre trabajos: se leen como tres encargos distintos y no como
    un bloque corrido. */
-.trabajo-par+.trabajo-par{border-top:1px solid var(--line);padding-top:var(--s6)}
+.trabajo-par+.trabajo-par{border-top:1px solid var(--line);padding-top:var(--sep-gal)}
 @media(max-width:760px){.trabajo-par{grid-template-columns:minmax(0,1fr);gap:var(--s5)}}
 .trabajo h3{font-family:var(--display);text-transform:uppercase;font-size:clamp(20px,2.4vw,28px);
   line-height:1.05;margin:0 0 var(--s3)}
