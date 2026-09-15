@@ -1,0 +1,8 @@
+Estos tres archivos son la web lista para subir. Los tres juntos, en la misma
+carpeta, sin subcarpetas:
+
+    index.html      la página entera, con las fotos y el logo dentro
+    proceso.mp4     el video
+    proceso.webm    el mismo video, más liviano, para los navegadores que lo entienden
+
+No se generan a mano: salen de "python3 arma.py" en la carpeta de arriba.
