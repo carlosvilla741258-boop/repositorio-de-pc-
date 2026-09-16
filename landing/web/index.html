@@ -686,16 +686,12 @@ function tarjeta(i){
   adelante.disabled = i === CAPS.length - 1;
 }
 
-/* Entrar en un tramo: saltar a su inicio y dejarlo correr.
-   Con movimiento reducido no se arranca nada solo, pero el video se queda:
-   se salta al fotograma final del tramo, que es justo el resultado del que
-   habla la tarjeta, y quien quiera verlo moverse le da al play. */
+/* Entrar en un tramo: saltar a su inicio y dejarlo correr. */
 function irA(i){
   if (i === cap) return;
   cap = i;
   tarjeta(i);
   if (!listo) return;
-  if (reduce){ try { v.currentTime = CAPS[i].fin; } catch(e){} return; }
   try { v.currentTime = CAPS[i].t0 + 0.02; } catch(e){}
   const intento = v.play();
   if (intento && intento.catch) intento.catch(function(){
@@ -760,29 +756,43 @@ v.addEventListener("loadedmetadata", metadatos);
 /* Con el video incrustado los metadatos pueden estar listos ANTES de que
    corra este script: el evento no llegaría nunca. Se comprueba a mano. */
 if (v.readyState >= 1) metadatos();
-/* Que no haya video es lo único que deja la página sin nada que enseñar.
-   Con <source> el fallo no llega al propio <video>: el evento se dispara en
-   la última fuente y `v.error` se queda en null, así que hay que escucharlo
-   en captura y mirar `networkState`, que es lo que de verdad dice si quedó
-   alguna fuente en pie. */
-function falloVideo(){
-  if (document.documentElement.classList.contains("estatico")) return;
-  if (v.networkState !== 3 && !v.error) return;   /* 3 = NETWORK_NO_SOURCE */
-  const e = v.error;
-  aEstatico("El video no pudo cargarse" + (e ? " (error " + e.code + ")" : "") + ".");
+/* Que no haya video es lo único que deja la página sin nada que enseñar, y
+   cuesta caro equivocarse: si se declara roto uno que iba a cargar, el
+   visitante ve un aviso de error sobre un video que funciona.
+
+   `networkState` no sirve para decidirlo. NETWORK_NO_SOURCE no significa
+   "no hay video": es también el estado por el que pasa el navegador
+   mientras todavía está eligiendo entre los <source>. Mirarlo daba por
+   rotos videos que cargaban perfectamente.
+
+   Lo único que no admite doble lectura es esto: si el navegador declara un
+   error, es definitivo; y si al cabo de un rato largo no llegaron ni los
+   metadatos ni un solo byte, no hay nada que enseñar. Mientras sigan
+   llegando bytes es una conexión lenta, no un fallo, y se espera más. */
+let dicho = false;
+function aFallo(txt){
+  if (dicho || listo) return;
+  dicho = true;
+  aEstatico(txt);
 }
-v.addEventListener("error", falloVideo);
-v.addEventListener("error", falloVideo, true);
-/* Y por lo mismo que los metadatos: con un 404 las fuentes fallan mientras la
-   página se está leyendo, antes de que exista ningún oyente. Se comprueba a
-   mano ahora y otra vez cuando termina de cargar todo. */
-falloVideo();
-addEventListener("load", falloVideo);
+v.addEventListener("error", function(){
+  if (v.error) aFallo("El video no pudo cargarse (error " + v.error.code + ").");
+});
+let bytes = false;
+v.addEventListener("progress", function(){ bytes = true; });
+(function espera(vuelta){
+  setTimeout(function(){
+    if (listo || dicho) return;
+    if (bytes && vuelta < 4){ bytes = false; espera(vuelta + 1); return; }
+    aFallo("El video no pudo cargarse.");
+  }, 10000);
+})(1);
 
 tarjeta(0);
 ejeFlechas();
-/* Con movimiento reducido se muestran los mandos del navegador: es la única
-   forma visible de arrancarlo, ya que aquí no arranca solo. */
+/* Con movimiento reducido el video sigue reproduciéndose —es el contenido de
+   la página, no un adorno— pero se dejan a la vista los mandos del navegador
+   para que pararlo sea inmediato. */
 if (reduce) v.controls = true;
 
 /* Si el navegador bloqueó la reproducción, el primer gesto la libera. */
