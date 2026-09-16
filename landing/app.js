@@ -47,7 +47,7 @@ const PRECIOS = {
    {nom:"Premium", pie:"El acabado más fino, como recién salido de fábrica."}],
  filas:[
    {svc:"Pintura",  celdas:[[["Colores planos","S/ 200 – 400"]],
-                            [["Tricapa","S/ 350"]],
+                            [["Tricapa · colores especiales","S/ 350"]],
                             [["Candy","S/ 450 – 600"]]]},
    {svc:"Pulido",   celdas:[[["Un paso","S/ 350"]],
                             [["Tres pasos","S/ 700"]],
