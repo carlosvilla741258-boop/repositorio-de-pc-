@@ -307,6 +307,7 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
 .estatico .capitulos{display:grid;gap:var(--s5);padding:var(--s6) var(--gut) var(--s7);
   max-width:1180px;margin:0 auto}
 .cap-est{border-top:1px solid var(--line);padding-top:var(--s4)}
+.aviso-est{color:var(--red);font-size:14px;letter-spacing:.04em;margin:0}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 
@@ -690,7 +691,7 @@ function irA(i){
   if (i === cap) return;
   cap = i;
   tarjeta(i);
-  if (!listo || reduce) return;
+  if (!listo) return;
   try { v.currentTime = CAPS[i].t0 + 0.02; } catch(e){}
   const intento = v.play();
   if (intento && intento.catch) intento.catch(function(){
@@ -734,33 +735,65 @@ v.addEventListener("play", function(){
 });
 v.addEventListener("pause", function(){ vigilando = false; });
 
-function aEstatico(){
+function aEstatico(aviso){
   document.documentElement.classList.add("estatico");
-  $("#capitulos").innerHTML = CAPS.map(c =>
-    '<div class="cap-est"><p class="chapno">'+c.no+'</p>'+
-    '<h2>'+c.t.split("\n").join(" ")+'</h2><p class="lead">'+c.txt+'</p>'+
-    '<div class="tarifas">'+(c.tar||[]).map(x =>
-      '<span class="tarifa">'+x[0]+'<b class="tnum">'+x[1]+'</b></span>').join("")+
-    '</div></div>').join("");
+  $("#capitulos").innerHTML =
+    (aviso ? '<p class="aviso-est">'+aviso+'</p>' : '') +
+    CAPS.map(c =>
+      '<div class="cap-est"><p class="chapno">'+c.no+'</p>'+
+      '<h2>'+c.t.split("\n").join(" ")+'</h2><p class="lead">'+c.txt+'</p>'+
+      '<div class="tarifas">'+(c.tar||[]).map(x =>
+        '<span class="tarifa">'+x[0]+'<b class="tnum">'+x[1]+'</b></span>').join("")+
+      '</div></div>').join("");
 }
 
 function metadatos(){
   listo = (v.duration || 0) > 0;
   ejeFlechas();
-  if (listo && !reduce) irA(0);
+  if (listo) irA(0);
 }
 v.addEventListener("loadedmetadata", metadatos);
 /* Con el video incrustado los metadatos pueden estar listos ANTES de que
    corra este script: el evento no llegaría nunca. Se comprueba a mano. */
 if (v.readyState >= 1) metadatos();
+/* Que no haya video es lo único que deja la página sin nada que enseñar, y
+   cuesta caro equivocarse: si se declara roto uno que iba a cargar, el
+   visitante ve un aviso de error sobre un video que funciona.
+
+   `networkState` no sirve para decidirlo. NETWORK_NO_SOURCE no significa
+   "no hay video": es también el estado por el que pasa el navegador
+   mientras todavía está eligiendo entre los <source>. Mirarlo daba por
+   rotos videos que cargaban perfectamente.
+
+   Lo único que no admite doble lectura es esto: si el navegador declara un
+   error, es definitivo; y si al cabo de un rato largo no llegaron ni los
+   metadatos ni un solo byte, no hay nada que enseñar. Mientras sigan
+   llegando bytes es una conexión lenta, no un fallo, y se espera más. */
+let dicho = false;
+function aFallo(txt){
+  if (dicho || listo) return;
+  dicho = true;
+  aEstatico(txt);
+}
 v.addEventListener("error", function(){
-  aEstatico();
-  pista.textContent = "El video no pudo cargarse";
+  if (v.error) aFallo("El video no pudo cargarse (error " + v.error.code + ").");
 });
+let bytes = false;
+v.addEventListener("progress", function(){ bytes = true; });
+(function espera(vuelta){
+  setTimeout(function(){
+    if (listo || dicho) return;
+    if (bytes && vuelta < 4){ bytes = false; espera(vuelta + 1); return; }
+    aFallo("El video no pudo cargarse.");
+  }, 10000);
+})(1);
 
 tarjeta(0);
 ejeFlechas();
-if (reduce) aEstatico();
+/* Con movimiento reducido el video sigue reproduciéndose —es el contenido de
+   la página, no un adorno— pero se dejan a la vista los mandos del navegador
+   para que pararlo sea inmediato. */
+if (reduce) v.controls = true;
 
 /* Si el navegador bloqueó la reproducción, el primer gesto la libera. */
 function desbloquear(){
