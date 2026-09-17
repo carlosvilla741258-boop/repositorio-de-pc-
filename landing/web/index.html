@@ -534,6 +534,24 @@ footer{border-top:1px solid var(--line);padding-block:var(--s5);display:flex;
    acumulado metía la congelación dentro del negro. */
 const T0  = [0,    8.292, 16.542, 24.792, 33.042, 41.292];  // arranque de cada tramo
 const FIN = [7.98, 16.23, 24.48,  32.73,  40.98,  49.23];   // último fotograma con imagen
+/* Punto exacto al que salta cada flecha. Normalmente t0 + 0,02 vale, pero el
+   salto tiene que caer en un fotograma clave: si cae antes de uno, el
+   navegador está obligado a bajar y descomponer el video desde la clave
+   anterior para poder pintar esa imagen.
+
+   Las claves del mp4 están en 0 · 8,292 · 16,542 · 24,792 · 33,0833 · 41,292.
+   La del quinto clip quedó un fotograma tarde al montar el archivo —33,0833 en
+   vez de 33,042—, así que el salto a 33,062 caía justo por delante de ella y
+   obligaba a decodificar 8,23 s en lugar de 0,02. Esa era la demora al pasar
+   de Pintura a Pulido, y la única de las cinco.
+
+   El valor va con holgura por DELANTE de la clave, no pegado a ella: 33,083
+   parece razonable y no sirve, porque la clave está en 33,08333 y se queda
+   tres décimas de milisegundo corto. Medido con ffmpeg sobre el archivo:
+   33,062 → 175 ms · 33,083 → 173 ms · 33,084 → 68 ms · 33,09 → 65 ms, que es
+   lo mismo que cuestan los otros cuatro tramos. 33,09 sigue cayendo dentro
+   del mismo fotograma, que dura hasta 33,125. */
+const SALTO = [null, null, null, null, 33.09, null];
 const CAPS = [
  { no:"Abarca Factoría", t:"Detalle y precisión\nen cada reparación",
    txt:"Cinco años devolviendo a los vehículos su aspecto original en San Juan de "+
@@ -560,7 +578,10 @@ const CAPS = [
        "que elijas. El detalle que cambia el carro entero.",
    tar:[["Juego de 4","A evaluar"],["Acabados","Plano · metalizado"]] }
 ];
-CAPS.forEach(function(c,i){ c.t0 = T0[i]; c.fin = FIN[i]; });
+CAPS.forEach(function(c,i){
+  c.t0 = T0[i]; c.fin = FIN[i];
+  c.salto = SALTO[i] === null ? T0[i] + 0.02 : SALTO[i];
+});
 
 /* Un solo juego de precios, el de auto: el servicio manda la fila y el nivel de
    acabado la columna, que es como de verdad se comparan. */
@@ -692,7 +713,7 @@ function irA(i){
   cap = i;
   tarjeta(i);
   if (!listo) return;
-  try { v.currentTime = CAPS[i].t0 + 0.02; } catch(e){}
+  try { v.currentTime = CAPS[i].salto; } catch(e){}
   const intento = v.play();
   if (intento && intento.catch) intento.catch(function(){
     /* El navegador no deja reproducir todavía: al menos se muestra el
@@ -799,7 +820,7 @@ if (reduce) v.controls = true;
 function desbloquear(){
   if (!bloqueado || !listo) return;
   bloqueado = false;
-  try { v.currentTime = CAPS[cap].t0 + 0.02; } catch(e){}
+  try { v.currentTime = CAPS[cap].salto; } catch(e){}
   v.play().catch(function(){});
 }
 addEventListener("pointerdown", desbloquear, {passive:true});
