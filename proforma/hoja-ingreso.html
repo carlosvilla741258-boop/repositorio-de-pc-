@@ -95,28 +95,29 @@
   .cb:checked{background:var(--ink);border-color:var(--ink);
     background-image:linear-gradient(45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%),
                      linear-gradient(-45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%)}
-  .tablero{border:1px solid var(--rule);padding:8px 11px 10px}
-  .tablero .ayuda{margin:0 0 8px;font-size:11px;color:var(--muted)}
+  .tablero{border:1px solid var(--rule);padding:6px 11px 7px}
+  .tablero .ayuda{margin:0 0 6px;font-size:11px;color:var(--muted)}
   .tablero .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0 22px;
                  grid-auto-flow:column;grid-template-rows:repeat(13,auto)}
+  .tablero .cols.interior{grid-template-rows:repeat(5,auto)}
   .tablero .cab,.tablero .it{display:grid;grid-template-columns:1fr 30px 30px;
                              gap:6px;align-items:center}
   .tablero .cab{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;
                 text-transform:uppercase;color:var(--muted);padding-bottom:3px;
                 border-bottom:1px solid var(--rule)}
   .tablero .cab span+span,.tablero .it .bx{text-align:center}
-  .tablero .it{font-size:11.5px;padding:2.5px 0;border-bottom:1px dotted var(--rule)}
+  .tablero .it{font-size:11.5px;padding:1.5px 0;border-bottom:1px dotted var(--rule)}
   .tablero .it>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tablero .it:nth-last-child(-n+1){border-bottom:0}
   .tablero .bx{display:flex;justify-content:center}
 
   /* observaciones y firmas */
-  .obs{border:1px solid var(--rule);padding:8px 11px 10px}
+  .obs{border:1px solid var(--rule);padding:6px 11px 7px}
   .obs .lin{display:block;min-height:18px;border-bottom:1px solid var(--rule);
             padding:1px 2px;font-size:12px}
   .obs .lin:last-child{border-bottom:0}
-  .legal{font-size:9.5px;color:var(--muted);line-height:1.5;margin:0}
-  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:6px}
+  .legal{font-size:9.5px;color:var(--muted);line-height:1.45;margin:0}
+  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:4px}
   .firmas div{border-top:1px solid var(--field-line);padding-top:6px;text-align:center;
               font-size:11px;color:var(--muted)}
 
@@ -163,9 +164,6 @@
       <p><span class="dot">&#9679;</span><span><b>Teléfono:</b> <span class="v">+51 934 965 098 &nbsp;/&nbsp; +51 973 219 397</span></span></p>
     </div>
 
-    <div class="servicios">Reparación de carrocería &nbsp;|&nbsp; Reparación de fibra de vidrio &nbsp;|&nbsp; Reconstrucción<br>
-      Desabolladura &nbsp;|&nbsp; Reparación de rayones &nbsp;|&nbsp; Enderezado de chasis &nbsp;|&nbsp; Modificaciones, entre otros.</div>
-
     <div class="filas">
       <div class="fila"><span class="rot">Fecha:</span><span class="val f" contenteditable="plaintext-only" data-k="fecha"></span></div>
       <div class="fila"><span class="rot">Cliente:</span><span class="val f" contenteditable="plaintext-only" data-k="cliente"></span></div>
@@ -180,7 +178,7 @@
     </div>
 
     <div>
-      <div class="barlabel izq">Partes dañadas &mdash; marcar sí o no</div>
+      <div class="barlabel izq">Partes dañadas &mdash; exterior</div>
       <div class="tablero">
         <p class="ayuda">Marcar <b>Sí</b> si la parte ingresa con daño, <b>No</b> si está conforme.
         El detalle del daño va en observaciones.</p>
@@ -230,12 +228,34 @@
 
 
     <div>
+      <div class="barlabel izq">Partes dañadas &mdash; interior</div>
+      <div class="tablero">
+        <div class="cols interior">
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Tablero / consola</span><span class="bx"><input class="cb" type="checkbox" data-c="i0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i0_no"></span></div>
+          <div class="it"><span>Timón</span><span class="bx"><input class="cb" type="checkbox" data-c="i1_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i1_no"></span></div>
+          <div class="it"><span>Radio / autoestéreo</span><span class="bx"><input class="cb" type="checkbox" data-c="i2_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i2_no"></span></div>
+          <div class="it"><span>Asientos delanteros</span><span class="bx"><input class="cb" type="checkbox" data-c="i3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i3_no"></span></div>
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Asientos posteriores</span><span class="bx"><input class="cb" type="checkbox" data-c="i4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i4_no"></span></div>
+          <div class="it"><span>Tapiz de puertas</span><span class="bx"><input class="cb" type="checkbox" data-c="i5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i5_no"></span></div>
+          <div class="it"><span>Cielo raso (techo int.)</span><span class="bx"><input class="cb" type="checkbox" data-c="i6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i6_no"></span></div>
+          <div class="it"><span>Alfombras / pisos</span><span class="bx"><input class="cb" type="checkbox" data-c="i7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i7_no"></span></div>
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Palanca de cambios</span><span class="bx"><input class="cb" type="checkbox" data-c="i8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i8_no"></span></div>
+          <div class="it"><span>Espejo retrovisor</span><span class="bx"><input class="cb" type="checkbox" data-c="i9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i9_no"></span></div>
+          <div class="it"><span>Guantera</span><span class="bx"><input class="cb" type="checkbox" data-c="i10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i10_no"></span></div>
+          <div class="it"><span>Cinturones de seg.</span><span class="bx"><input class="cb" type="checkbox" data-c="i11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i11_no"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
       <div class="barlabel izq">Observaciones / trabajo solicitado</div>
       <div class="obs">
         <span class="lin f" contenteditable="plaintext-only" data-k="obs1"></span>
         <span class="lin f" contenteditable="plaintext-only" data-k="obs2"></span>
         <span class="lin f" contenteditable="plaintext-only" data-k="obs3"></span>
-        <span class="lin f" contenteditable="plaintext-only" data-k="obs4"></span>
       </div>
     </div>
 
