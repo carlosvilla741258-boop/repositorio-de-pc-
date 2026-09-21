@@ -1,4 +1,4 @@
-# Proformas de ABARCA
+# Documentos de ABARCA
 
 Generador de las proformas a partir de un archivo de datos.
 
@@ -18,3 +18,11 @@ Generador de las proformas a partir de un archivo de datos.
 3. `node word.js datos/mi-proforma.json` → documento de Word.
 
 El PDF sale imprimiendo la página web (botón *Imprimir / PDF*).
+
+## Hoja de ingreso vehicular
+
+`hoja-ingreso.html` es la hoja con la que se recibe un vehiculo en el taller:
+datos del cliente y del vehiculo, nivel de combustible, croquis en cinco
+vistas para marcar los danos, inventario e observaciones. Se puede llenar
+en pantalla o imprimir en blanco y llenar a mano. No usa generador: es un
+archivo suelto, se edita directamente.
