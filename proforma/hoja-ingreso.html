@@ -56,20 +56,24 @@
        letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
   .nro .f{min-width:74px;display:inline-block}
 
-  /* barras de seccion y rejillas */
+  /* barras de seccion y filas de datos, como en el documento del taller */
   .barlabel{background:var(--bar);color:var(--bar-ink);font-family:var(--cond);font-weight:600;
-            font-size:14.5px;letter-spacing:.13em;text-transform:uppercase;padding:4px 11px}
-  .grid{display:grid;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
-  .grid>div{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
-            min-width:0;display:flex;align-items:center;min-height:22px}
-  .grid>.k{background:var(--fill);font-family:var(--cond);font-weight:600;font-size:13px;
-           letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;white-space:nowrap}
-  .grid>.v{padding:0}
-  .grid>.v>.f{width:100%;padding:3px 8px;font-size:12.5px;min-height:22px}
-  .g2{grid-template-columns:max-content 1fr max-content 1fr}
-  .g3{grid-template-columns:max-content 1fr max-content 1fr max-content 1fr}
-  .grid .v.wide5{grid-column:span 5}
-  .grid .v.wide{grid-column:span 3}
+            font-size:14.5px;letter-spacing:.13em;text-transform:uppercase;padding:4px 11px;
+            text-align:center}
+  .barlabel.izq{text-align:left}
+  .filas{display:flex;flex-direction:column;gap:5px}
+  .fila{display:flex;align-items:stretch}
+  .fila .rot{background:var(--bar);color:var(--bar-ink);font-family:var(--cond);font-weight:600;
+             font-size:13.5px;letter-spacing:.08em;text-transform:uppercase;
+             padding:4px 10px;display:flex;align-items:center;white-space:nowrap;
+             min-width:116px;flex:none}
+  .fila .rot.corto{min-width:96px}
+  .fila .val{flex:1;min-width:0;border:1px solid var(--rule);border-left:0;
+             padding:4px 9px;font-size:12.5px;display:flex;align-items:center;min-height:24px}
+  .fila .rot+.rot{margin-left:9px}
+
+  .servicios{border:1px solid var(--rule);border-radius:2px;padding:6px 12px;text-align:center;
+             font-size:11.5px;color:var(--muted);line-height:1.55}
 
   /* campos escribibles */
   .f{outline:0}
@@ -153,45 +157,28 @@
     </div>
 
     <div class="locales">
-      <p><span class="dot">&#9679;</span><span><b>Local Zárate:</b> <span class="v">Jirón Santa Mónica 635 &ndash; SJL</span></span></p>
       <p><span class="dot">&#9679;</span><span><b>Local Santa Rosa:</b> <span class="v">Av. Santa Rosa Lt. 3 Mz. U, Urb. Semirústica Cerro Grande &ndash; SJL</span></span></p>
       <p><span class="dot">&#9679;</span><span><b>Teléfono:</b> <span class="v">+51 934 965 098 &nbsp;/&nbsp; +51 973 219 397</span></span></p>
     </div>
 
-    <div>
-      <div class="barlabel">Datos del cliente</div>
-      <div class="grid g3">
-        <div class="k">Fecha</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="fecha"></span></div>
-        <div class="k">Hora</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="hora"></span></div>
-        <div class="k">N° ingreso</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="nro"></span></div>
-        <div class="k">Cliente</div><div class="v wide5"><span class="f" contenteditable="plaintext-only" data-k="cliente"></span></div>
-        <div class="k">DNI / RUC</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="doc"></span></div>
-        <div class="k">Teléfono</div><div class="v wide"><span class="f" contenteditable="plaintext-only" data-k="tel"></span></div>
-      </div>
+    <div class="servicios">Reparación de carrocería &nbsp;|&nbsp; Reparación de fibra de vidrio &nbsp;|&nbsp; Reconstrucción<br>
+      Desabolladura &nbsp;|&nbsp; Reparación de rayones &nbsp;|&nbsp; Enderezado de chasis &nbsp;|&nbsp; Modificaciones, entre otros.</div>
+
+    <div class="filas">
+      <div class="fila"><span class="rot">Fecha:</span><span class="val f" contenteditable="plaintext-only" data-k="fecha"></span></div>
+      <div class="fila"><span class="rot">Cliente:</span><span class="val f" contenteditable="plaintext-only" data-k="cliente"></span></div>
+      <div class="fila"><span class="rot">DNI/RUC:</span><span class="val f" contenteditable="plaintext-only" data-k="doc"></span></div>
+      <div class="fila"><span class="rot">Teléfono:</span><span class="val f" contenteditable="plaintext-only" data-k="tel"></span></div>
     </div>
 
-    <div>
+    <div class="filas">
       <div class="barlabel">Datos del vehículo</div>
-      <div class="grid g3">
-        <div class="k">Marca</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="marca"></span></div>
-        <div class="k">Modelo</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="modelo"></span></div>
-        <div class="k">Año</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="anio"></span></div>
-        <div class="k">Tipo</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="tipo"></span></div>
-        <div class="k">Placa</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="placa"></span></div>
-        <div class="k">Color</div><div class="v"><span class="f" contenteditable="plaintext-only" data-k="color"></span></div>
-      </div>
-    </div>
-
-    <div class="franja">
-      <span class="rot">Combustible</span>
-      <label class="opc"><input class="cb" type="checkbox" data-c="comb_0">E</label><label class="opc"><input class="cb" type="checkbox" data-c="comb_1">1/4</label><label class="opc"><input class="cb" type="checkbox" data-c="comb_2">1/2</label><label class="opc"><input class="cb" type="checkbox" data-c="comb_3">3/4</label><label class="opc"><input class="cb" type="checkbox" data-c="comb_4">F</label>
-      <span class="rot">Kilometraje</span><span class="f" contenteditable="plaintext-only" data-k="km" style="min-width:74px"></span>
-      <span class="rot">Entrega aprox.</span><span class="f" contenteditable="plaintext-only" data-k="entrega" style="min-width:74px"></span>
-      <span class="rot">Atendido por</span><span class="f" contenteditable="plaintext-only" data-k="recibe" style="min-width:96px"></span>
+      <div class="fila"><span class="rot corto">Marca:</span><span class="val f" contenteditable="plaintext-only" data-k="marca"></span><span class="rot corto">Modelo:</span><span class="val f" contenteditable="plaintext-only" data-k="modelo"></span></div>
+      <div class="fila"><span class="rot corto">Tipo:</span><span class="val f" contenteditable="plaintext-only" data-k="tipo"></span><span class="rot corto">Placa:</span><span class="val f" contenteditable="plaintext-only" data-k="placa"></span></div>
     </div>
 
     <div>
-      <div class="barlabel">Partes dañadas &mdash; marcar sí o no</div>
+      <div class="barlabel izq">Partes dañadas &mdash; marcar sí o no</div>
       <div class="tablero">
         <p class="ayuda">Marcar <b>Sí</b> si la parte ingresa con daño, <b>No</b> si está conforme.
         El detalle del daño va en observaciones.</p>
@@ -241,7 +228,7 @@
 
 
     <div>
-      <div class="barlabel">Observaciones / trabajo solicitado</div>
+      <div class="barlabel izq">Observaciones / trabajo solicitado</div>
       <div class="obs">
         <span class="lin f" contenteditable="plaintext-only" data-k="obs1"></span>
         <span class="lin f" contenteditable="plaintext-only" data-k="obs2"></span>
