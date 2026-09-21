@@ -99,7 +99,8 @@
   .tablero .ayuda{margin:0 0 6px;font-size:11px;color:var(--muted)}
   .tablero .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0 22px;
                  grid-auto-flow:column;grid-template-rows:repeat(13,auto)}
-  .tablero .cols.interior{grid-template-rows:repeat(5,auto)}
+  .tablero .cols{grid-template-rows:repeat(15,auto)}
+  .tablero .cols.interior{grid-template-rows:repeat(7,auto)}
   .tablero .cab,.tablero .it{display:grid;grid-template-columns:1fr 30px 30px;
                              gap:6px;align-items:center}
   .tablero .cab{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;
@@ -110,6 +111,41 @@
   .tablero .it>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tablero .it:nth-last-child(-n+1){border-bottom:0}
   .tablero .bx{display:flex;justify-content:center}
+
+  /* hoja 2: diagrama de carroceria */
+  .pag2{break-before:page;display:flex;flex-direction:column;gap:5px;margin-top:22px}
+  .cab2{display:flex;align-items:baseline;gap:12px;font-size:10.5px;color:var(--muted);
+        border-bottom:1px solid var(--rule);padding-bottom:4px}
+  .cab2 b{font-family:var(--cond);font-weight:700;font-size:15px;letter-spacing:.1em;
+          text-transform:uppercase;color:var(--ink)}
+  .cab2 .pl{margin-left:auto;white-space:nowrap}
+  .cab2 .pl .f{display:inline-block;min-width:96px;border-bottom:1px solid var(--field-line)}
+  .dibujos{border:1px solid var(--rule);padding:7px 10px 9px}
+  .dibujos .f1,.dibujos .f2{display:flex;justify-content:center;align-items:flex-end}
+  .dibujos .f2{gap:34px;margin-top:4px}
+  .dibujos svg{height:166px;width:auto;max-width:100%;display:block}
+  .dibujos .f2 svg{height:142px}
+  .dib{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+  .dib .t{stroke:var(--muted);stroke-width:1.1}
+  .dib .op{stroke-dasharray:4 3}
+  .dib .r{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+  .nm circle{fill:var(--paper);stroke:var(--brand);stroke-width:1.3}
+  .nm text{fill:var(--brand);font-family:var(--mono);font-size:11.5px;font-weight:600;
+           text-anchor:middle}
+  .lista2{border:1px solid var(--rule);padding:6px 11px 8px;margin-top:5px}
+  .lista2 .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0 20px;
+                grid-auto-flow:column;grid-template-rows:repeat(11,auto)}
+  .lista2 .cab,.lista2 .it{display:grid;grid-template-columns:20px 1fr 28px 28px;
+                           gap:5px;align-items:center}
+  .lista2 .cab{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;
+               text-transform:uppercase;color:var(--muted);padding-bottom:3px;
+               border-bottom:1px solid var(--rule)}
+  .lista2 .cab span+span+span,.lista2 .cab span+span+span+span,
+  .lista2 .it .bx{text-align:center}
+  .lista2 .it{font-size:11.5px;padding:1.5px 0;border-bottom:1px dotted var(--rule)}
+  .lista2 .it>span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lista2 .it .n{font-family:var(--mono);font-size:10px;color:var(--brand);text-align:center}
+  .lista2 .bx{display:flex;justify-content:center}
 
   /* observaciones y firmas */
   .obs{border:1px solid var(--rule);padding:6px 11px 7px}
@@ -123,14 +159,16 @@
 
   @media print{
     @page{size:A4;margin:12.8mm}
-    body{background:#fff;color:#000}
+    html,body{background:#fff}
+    body{color:#000}
     .bar{display:none !important}
     .wrap{padding:0;max-width:none;gap:0}
     .sheet{box-shadow:none;padding:0;border-radius:0;background:#fff;
            zoom:1 !important;width:auto !important;max-width:none}
     .sheet .f[contenteditable]{background:none !important;box-shadow:none !important}
     .franja .f{border-bottom:1px solid #B9B2AB}
-    .tablero,.obs,.franja{break-inside:avoid}
+    .tablero,.obs,.franja,.dibujos,.lista2{break-inside:avoid}
+    .pag2{margin-top:0}
     .barlabel,.rucbox .ruc,.grid>.k,.cb:checked{
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
@@ -187,41 +225,45 @@
           <div class="it"><span>Parachoques delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p0_no"></span></div>
           <div class="it"><span>Capó</span><span class="bx"><input class="cb" type="checkbox" data-c="p1_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p1_no"></span></div>
           <div class="it"><span>Parrilla</span><span class="bx"><input class="cb" type="checkbox" data-c="p2_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p2_no"></span></div>
-          <div class="it"><span>Faro delantero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p3_no"></span></div>
-          <div class="it"><span>Faro delantero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p4_no"></span></div>
-          <div class="it"><span>Parabrisas delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p5_no"></span></div>
-          <div class="it"><span>Guardafango del. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p6_no"></span></div>
-          <div class="it"><span>Guardafango del. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p7_no"></span></div>
-          <div class="it"><span>Techo</span><span class="bx"><input class="cb" type="checkbox" data-c="p8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p8_no"></span></div>
-          <div class="it"><span>Aros / llantas</span><span class="bx"><input class="cb" type="checkbox" data-c="p9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p9_no"></span></div>
-          <div class="it"><span>Chasis</span><span class="bx"><input class="cb" type="checkbox" data-c="p10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p10_no"></span></div>
-          <div class="it"><span>Pintura general</span><span class="bx"><input class="cb" type="checkbox" data-c="p11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p11_no"></span></div>
+          <div class="it"><span>Máscara</span><span class="bx"><input class="cb" type="checkbox" data-c="p3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p3_no"></span></div>
+          <div class="it"><span>Faro delantero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p4_no"></span></div>
+          <div class="it"><span>Faro delantero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p5_no"></span></div>
+          <div class="it"><span>Neblinero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p6_no"></span></div>
+          <div class="it"><span>Neblinero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p7_no"></span></div>
+          <div class="it"><span>Limpiaparabrisas</span><span class="bx"><input class="cb" type="checkbox" data-c="p8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p8_no"></span></div>
+          <div class="it"><span>Parabrisas delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p9_no"></span></div>
+          <div class="it"><span>Guardafango del. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p10_no"></span></div>
+          <div class="it"><span>Guardafango del. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p11_no"></span></div>
+          <div class="it"><span>Techo</span><span class="bx"><input class="cb" type="checkbox" data-c="p12_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p12_no"></span></div>
+          <div class="it"><span>Aros / llantas</span><span class="bx"><input class="cb" type="checkbox" data-c="p13_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p13_no"></span></div>
           <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
-          <div class="it"><span>Puerta delantera izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p12_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p12_no"></span></div>
-          <div class="it"><span>Puerta posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p13_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p13_no"></span></div>
-          <div class="it"><span>Panel lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p14_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p14_no"></span></div>
-          <div class="it"><span>Estribo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p15_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p15_no"></span></div>
-          <div class="it"><span>Espejo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p16_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p16_no"></span></div>
-          <div class="it"><span>Baranda lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p17_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p17_no"></span></div>
-          <div class="it"><span>Puerta delantera der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p18_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p18_no"></span></div>
-          <div class="it"><span>Puerta posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p19_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p19_no"></span></div>
-          <div class="it"><span>Panel lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p20_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p20_no"></span></div>
-          <div class="it"><span>Estribo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p21_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p21_no"></span></div>
-          <div class="it"><span>Espejo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p22_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p22_no"></span></div>
-          <div class="it"><span>Baranda lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p23_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p23_no"></span></div>
+          <div class="it"><span>Puerta delantera izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p14_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p14_no"></span></div>
+          <div class="it"><span>Puerta posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p15_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p15_no"></span></div>
+          <div class="it"><span>Panel lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p16_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p16_no"></span></div>
+          <div class="it"><span>Estribo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p17_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p17_no"></span></div>
+          <div class="it"><span>Espejo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p18_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p18_no"></span></div>
+          <div class="it"><span>Baranda lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p19_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p19_no"></span></div>
+          <div class="it"><span>Puerta delantera der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p20_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p20_no"></span></div>
+          <div class="it"><span>Puerta posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p21_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p21_no"></span></div>
+          <div class="it"><span>Panel lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p22_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p22_no"></span></div>
+          <div class="it"><span>Estribo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p23_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p23_no"></span></div>
+          <div class="it"><span>Espejo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p24_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p24_no"></span></div>
+          <div class="it"><span>Baranda lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p25_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p25_no"></span></div>
+          <div class="it"><span>Chasis</span><span class="bx"><input class="cb" type="checkbox" data-c="p26_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p26_no"></span></div>
+          <div class="it"><span>Pintura general</span><span class="bx"><input class="cb" type="checkbox" data-c="p27_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p27_no"></span></div>
           <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
-          <div class="it"><span>Parachoques posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p24_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p24_no"></span></div>
-          <div class="it"><span>Maletera / tapa post.</span><span class="bx"><input class="cb" type="checkbox" data-c="p25_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p25_no"></span></div>
-          <div class="it"><span>Panel posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p26_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p26_no"></span></div>
-          <div class="it"><span>Panel posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p27_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p27_no"></span></div>
-          <div class="it"><span>Guardafango post. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p28_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p28_no"></span></div>
-          <div class="it"><span>Guardafango post. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p29_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p29_no"></span></div>
-          <div class="it"><span>Faro posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p30_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p30_no"></span></div>
-          <div class="it"><span>Faro posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p31_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p31_no"></span></div>
-          <div class="it"><span>Luna posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p32_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p32_no"></span></div>
-          <div class="it"><span>Baranda posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p33_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p33_no"></span></div>
-          <div class="it"><span>Placa posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p34_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p34_no"></span></div>
-          <div class="it"><span>Lunas laterales</span><span class="bx"><input class="cb" type="checkbox" data-c="p35_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p35_no"></span></div>
+          <div class="it"><span>Parachoques posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p28_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p28_no"></span></div>
+          <div class="it"><span>Maletera / tapa post.</span><span class="bx"><input class="cb" type="checkbox" data-c="p29_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p29_no"></span></div>
+          <div class="it"><span>Panel posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p30_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p30_no"></span></div>
+          <div class="it"><span>Panel posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p31_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p31_no"></span></div>
+          <div class="it"><span>Guardafango post. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p32_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p32_no"></span></div>
+          <div class="it"><span>Guardafango post. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p33_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p33_no"></span></div>
+          <div class="it"><span>Faro posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p34_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p34_no"></span></div>
+          <div class="it"><span>Faro posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p35_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p35_no"></span></div>
+          <div class="it"><span>Luna posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p36_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p36_no"></span></div>
+          <div class="it"><span>Baranda posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p37_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p37_no"></span></div>
+          <div class="it"><span>Placa posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p38_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p38_no"></span></div>
+          <div class="it"><span>Lunas laterales</span><span class="bx"><input class="cb" type="checkbox" data-c="p39_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p39_no"></span></div>
         </div>
       </div>
     </div>
@@ -235,20 +277,157 @@
           <div class="it"><span>Tablero / consola</span><span class="bx"><input class="cb" type="checkbox" data-c="i0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i0_no"></span></div>
           <div class="it"><span>Timón</span><span class="bx"><input class="cb" type="checkbox" data-c="i1_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i1_no"></span></div>
           <div class="it"><span>Radio / autoestéreo</span><span class="bx"><input class="cb" type="checkbox" data-c="i2_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i2_no"></span></div>
-          <div class="it"><span>Asientos delanteros</span><span class="bx"><input class="cb" type="checkbox" data-c="i3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i3_no"></span></div>
+          <div class="it"><span>Botones eléctricos int.</span><span class="bx"><input class="cb" type="checkbox" data-c="i3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i3_no"></span></div>
+          <div class="it"><span>Asientos delanteros</span><span class="bx"><input class="cb" type="checkbox" data-c="i4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i4_no"></span></div>
+          <div class="it"><span>Asientos posteriores</span><span class="bx"><input class="cb" type="checkbox" data-c="i5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i5_no"></span></div>
           <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
-          <div class="it"><span>Asientos posteriores</span><span class="bx"><input class="cb" type="checkbox" data-c="i4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i4_no"></span></div>
-          <div class="it"><span>Tapiz de puertas</span><span class="bx"><input class="cb" type="checkbox" data-c="i5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i5_no"></span></div>
-          <div class="it"><span>Cielo raso (techo int.)</span><span class="bx"><input class="cb" type="checkbox" data-c="i6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i6_no"></span></div>
-          <div class="it"><span>Alfombras / pisos</span><span class="bx"><input class="cb" type="checkbox" data-c="i7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i7_no"></span></div>
+          <div class="it"><span>Tapiz de puertas</span><span class="bx"><input class="cb" type="checkbox" data-c="i6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i6_no"></span></div>
+          <div class="it"><span>Manijas de puerta</span><span class="bx"><input class="cb" type="checkbox" data-c="i7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i7_no"></span></div>
+          <div class="it"><span>Manijas de brazo</span><span class="bx"><input class="cb" type="checkbox" data-c="i8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i8_no"></span></div>
+          <div class="it"><span>Cielo raso (techo int.)</span><span class="bx"><input class="cb" type="checkbox" data-c="i9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i9_no"></span></div>
+          <div class="it"><span>Tapasoles</span><span class="bx"><input class="cb" type="checkbox" data-c="i10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i10_no"></span></div>
+          <div class="it"><span>Alfombras / pisos</span><span class="bx"><input class="cb" type="checkbox" data-c="i11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i11_no"></span></div>
           <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
-          <div class="it"><span>Palanca de cambios</span><span class="bx"><input class="cb" type="checkbox" data-c="i8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i8_no"></span></div>
-          <div class="it"><span>Espejo retrovisor</span><span class="bx"><input class="cb" type="checkbox" data-c="i9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i9_no"></span></div>
-          <div class="it"><span>Guantera</span><span class="bx"><input class="cb" type="checkbox" data-c="i10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i10_no"></span></div>
-          <div class="it"><span>Cinturones de seg.</span><span class="bx"><input class="cb" type="checkbox" data-c="i11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i11_no"></span></div>
+          <div class="it"><span>Palanca de cambios</span><span class="bx"><input class="cb" type="checkbox" data-c="i12_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i12_no"></span></div>
+          <div class="it"><span>Espejo retrovisor</span><span class="bx"><input class="cb" type="checkbox" data-c="i13_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i13_no"></span></div>
+          <div class="it"><span>Guantera</span><span class="bx"><input class="cb" type="checkbox" data-c="i14_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i14_no"></span></div>
+          <div class="it"><span>Cinturones de seg.</span><span class="bx"><input class="cb" type="checkbox" data-c="i15_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i15_no"></span></div>
+          <div class="it"><span>Llaves de repuesto</span><span class="bx"><input class="cb" type="checkbox" data-c="i16_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i16_no"></span></div>
+          <div class="it"><span>Llanta de repuesto</span><span class="bx"><input class="cb" type="checkbox" data-c="i17_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="i17_no"></span></div>
         </div>
       </div>
     </div>
+
+    <div class="pag2">
+      <div class="cab2"><b>Abarca</b> <span>Hoja de ingreso vehicular &mdash; partes de carrocería</span>
+        <span class="pl">Placa: <span class="f" contenteditable="plaintext-only" data-k="placa2"></span></span></div>
+
+      <div class="barlabel izq">Partes de carrocería &mdash; ¿el vehículo la tiene?</div>
+      <div class="dibujos">
+        <div class="f1">
+<svg viewBox="0 0 660 232" role="img" aria-label="Vista lateral con las piezas numeradas">
+  <g class="dib">
+    <path d="M18 180 L18 142 C18 130 24 124 36 121 L196 104 L254 52 C258 47 265 44 273 44
+             L440 44 C450 44 458 47 463 53 L516 100 L604 112 C616 114 624 120 624 132 L624 180 Z"/>
+    <path class="t" d="M66 178 L66 124"/>
+    <path class="t" d="M248 178 L248 106"/>
+    <path class="t" d="M378 178 L378 103"/>
+    <path class="t" d="M508 178 L508 100"/>
+    <path class="t" d="M600 178 L600 113"/>
+    <path class="t" d="M200 102 L256 56 L302 56 L302 102 Z"/>
+    <path class="t" d="M308 56 L372 56 L372 102 L308 102 Z"/>
+    <path class="t" d="M378 56 L442 56 L442 102 L378 102 Z"/>
+    <path class="t" d="M448 56 L458 56 L504 102 L448 102 Z"/>
+    <rect class="t" x="330" y="112" width="28" height="8" rx="3"/>
+    <rect class="t" x="404" y="112" width="28" height="8" rx="3"/>
+    <path class="t" d="M302 98 L286 90 L286 103 Z"/>
+    <rect class="t" x="248" y="169" width="260" height="9" rx="2"/>
+    <circle class="t" cx="565" cy="132" r="9"/>
+    <circle class="r" cx="152" cy="180" r="32"/><circle class="t" cx="152" cy="180" r="15"/>
+    <circle class="r" cx="492" cy="180" r="32"/><circle class="t" cx="492" cy="180" r="15"/>
+    <path class="t" d="M8 214 L652 214"/>
+  </g>
+  <g class="nm"><circle cx="37" cy="152" r="10.5"/><text x="37" y="155.8">1</text></g>
+  <g class="nm"><circle cx="128" cy="110" r="10.5"/><text x="128" y="113.8">2</text></g>
+  <g class="nm"><circle cx="96" cy="148" r="10.5"/><text x="96" y="151.8">3</text></g>
+  <g class="nm"><circle cx="292" cy="120" r="10.5"/><text x="292" y="123.8">4</text></g>
+  <g class="nm"><circle cx="238" cy="86" r="10.5"/><text x="238" y="89.8">5</text></g>
+  <g class="nm"><circle cx="352" cy="52" r="10.5"/><text x="352" y="55.8">6</text></g>
+  <g class="nm"><circle cx="318" cy="145" r="10.5"/><text x="318" y="148.8">7</text></g>
+  <g class="nm"><circle cx="452" cy="145" r="10.5"/><text x="452" y="148.8">8</text></g>
+  <g class="nm"><circle cx="446" cy="116" r="10.5"/><text x="446" y="119.8">9</text></g>
+  <g class="nm"><circle cx="378" cy="174" r="10.5"/><text x="378" y="177.8">10</text></g>
+  <g class="nm"><circle cx="530" cy="155" r="10.5"/><text x="530" y="158.8">11</text></g>
+  <g class="nm"><circle cx="410" cy="78" r="10.5"/><text x="410" y="81.8">12</text></g>
+  <g class="nm"><circle cx="575" cy="108" r="10.5"/><text x="575" y="111.8">13</text></g>
+  <g class="nm"><circle cx="614" cy="152" r="10.5"/><text x="614" y="155.8">14</text></g>
+  <g class="nm"><circle cx="152" cy="180" r="10.5"/><text x="152" y="183.8">15</text></g>
+  <g class="nm"><circle cx="565" cy="132" r="10.5"/><text x="565" y="135.8">16</text></g>
+</svg></div>
+        <div class="f2">
+<svg viewBox="0 0 300 206" role="img" aria-label="Vista frontal con las piezas numeradas">
+  <g class="dib">
+    <path d="M40 168 L40 95 C40 82 46 72 56 66 L70 35 C74 26 82 22 92 22 L208 22
+             C218 22 226 26 230 35 L244 66 C254 72 260 82 260 95 L260 168 Z"/>
+    <path class="t" d="M72 66 L84 30 L216 30 L228 66 Z"/>
+    <path class="t" d="M56 68 L244 68"/>
+    <rect class="t" x="112" y="86" width="76" height="22" rx="4"/>
+    <rect class="t" x="52" y="84" width="52" height="20" rx="6"/>
+    <rect class="t" x="196" y="84" width="52" height="20" rx="6"/>
+    <path class="t" d="M40 122 L260 122"/>
+    <circle class="t op" cx="74" cy="143" r="10"/><circle class="t op" cx="226" cy="143" r="10"/>
+    <rect class="t" x="120" y="132" width="60" height="20" rx="2"/>
+    <path class="t" d="M96 62 L142 40"/><path class="t" d="M158 62 L204 40"/>
+    <path class="t" d="M14 178 L286 178"/>
+  </g>
+  <g class="nm"><circle cx="150" cy="97" r="10.5"/><text x="150" y="100.8">17</text></g>
+  <g class="nm"><circle cx="78" cy="94" r="10.5"/><text x="78" y="97.8">18</text></g>
+  <g class="nm"><circle cx="222" cy="94" r="10.5"/><text x="222" y="97.8">19</text></g>
+  <g class="nm"><circle cx="74" cy="143" r="10.5"/><text x="74" y="146.8">20</text></g>
+  <g class="nm"><circle cx="226" cy="143" r="10.5"/><text x="226" y="146.8">21</text></g>
+  <g class="nm"><circle cx="126" cy="48" r="10.5"/><text x="126" y="51.8">22</text></g>
+  <g class="nm"><circle cx="150" cy="142" r="10.5"/><text x="150" y="145.8">23</text></g>
+</svg>
+<svg viewBox="0 0 300 206" role="img" aria-label="Vista posterior con las piezas numeradas">
+  <g class="dib">
+    <path d="M40 168 L40 95 C40 82 46 72 56 66 L68 34 C72 26 80 22 90 22 L210 22
+             C220 22 228 26 232 34 L244 66 C254 72 260 82 260 95 L260 168 Z"/>
+    <path class="t" d="M74 66 L84 30 L216 30 L226 66 Z"/>
+    <rect class="t" x="48" y="80" width="48" height="26" rx="4"/>
+    <rect class="t" x="204" y="80" width="48" height="26" rx="4"/>
+    <path class="t" d="M40 120 L260 120"/>
+    <rect class="t" x="120" y="128" width="60" height="20" rx="2"/>
+    <rect class="t op" x="128" y="23" width="44" height="7" rx="2"/>
+    <path class="t op" d="M78 60 L222 60 L222 68"/>
+    <path class="t" d="M56 68 L244 68"/>
+    <path class="t" d="M14 178 L286 178"/>
+  </g>
+  <g class="nm"><circle cx="150" cy="48" r="10.5"/><text x="150" y="51.8">24</text></g>
+  <g class="nm"><circle cx="72" cy="93" r="10.5"/><text x="72" y="96.8">25</text></g>
+  <g class="nm"><circle cx="228" cy="93" r="10.5"/><text x="228" y="96.8">26</text></g>
+  <g class="nm"><circle cx="150" cy="92" r="10.5"/><text x="150" y="95.8">27</text></g>
+  <g class="nm"><circle cx="150" cy="138" r="10.5"/><text x="150" y="141.8">28</text></g>
+  <g class="nm"><circle cx="104" cy="28" r="10.5"/><text x="104" y="31.8">29</text></g>
+  <g class="nm"><circle cx="206" cy="72" r="10.5"/><text x="206" y="75.8">30</text></g>
+</svg></div>
+      </div>
+      <div class="lista2">
+        <div class="cols">
+          <div class="cab"><span>N°</span><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span class="n">1</span><span>Parachoques del.</span><span class="bx"><input class="cb" type="checkbox" data-c="d0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d0_no"></span></div>
+          <div class="it"><span class="n">2</span><span>Capó</span><span class="bx"><input class="cb" type="checkbox" data-c="d1_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d1_no"></span></div>
+          <div class="it"><span class="n">3</span><span>Guardafango del.</span><span class="bx"><input class="cb" type="checkbox" data-c="d2_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d2_no"></span></div>
+          <div class="it"><span class="n">4</span><span>Espejo lateral</span><span class="bx"><input class="cb" type="checkbox" data-c="d3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d3_no"></span></div>
+          <div class="it"><span class="n">5</span><span>Parabrisas</span><span class="bx"><input class="cb" type="checkbox" data-c="d4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d4_no"></span></div>
+          <div class="it"><span class="n">6</span><span>Techo</span><span class="bx"><input class="cb" type="checkbox" data-c="d5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d5_no"></span></div>
+          <div class="it"><span class="n">7</span><span>Puerta delantera</span><span class="bx"><input class="cb" type="checkbox" data-c="d6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d6_no"></span></div>
+          <div class="it"><span class="n">8</span><span>Puerta posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="d7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d7_no"></span></div>
+          <div class="it"><span class="n">9</span><span>Manija de puerta</span><span class="bx"><input class="cb" type="checkbox" data-c="d8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d8_no"></span></div>
+          <div class="it"><span class="n">10</span><span>Estribo</span><span class="bx"><input class="cb" type="checkbox" data-c="d9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d9_no"></span></div>
+          <div class="cab"><span>N°</span><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span class="n">11</span><span>Panel lateral post.</span><span class="bx"><input class="cb" type="checkbox" data-c="d10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d10_no"></span></div>
+          <div class="it"><span class="n">12</span><span>Luna de puerta</span><span class="bx"><input class="cb" type="checkbox" data-c="d11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d11_no"></span></div>
+          <div class="it"><span class="n">13</span><span>Maletera / tapa post.</span><span class="bx"><input class="cb" type="checkbox" data-c="d12_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d12_no"></span></div>
+          <div class="it"><span class="n">14</span><span>Parachoques post.</span><span class="bx"><input class="cb" type="checkbox" data-c="d13_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d13_no"></span></div>
+          <div class="it"><span class="n">15</span><span>Aros / llantas</span><span class="bx"><input class="cb" type="checkbox" data-c="d14_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d14_no"></span></div>
+          <div class="it"><span class="n">16</span><span>Tapa de combustible</span><span class="bx"><input class="cb" type="checkbox" data-c="d15_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d15_no"></span></div>
+          <div class="it"><span class="n">17</span><span>Parrilla / máscara</span><span class="bx"><input class="cb" type="checkbox" data-c="d16_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d16_no"></span></div>
+          <div class="it"><span class="n">18</span><span>Faro delantero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="d17_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d17_no"></span></div>
+          <div class="it"><span class="n">19</span><span>Faro delantero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="d18_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d18_no"></span></div>
+          <div class="it"><span class="n">20</span><span>Neblinero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="d19_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d19_no"></span></div>
+          <div class="cab"><span>N°</span><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span class="n">21</span><span>Neblinero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="d20_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d20_no"></span></div>
+          <div class="it"><span class="n">22</span><span>Limpiaparabrisas</span><span class="bx"><input class="cb" type="checkbox" data-c="d21_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d21_no"></span></div>
+          <div class="it"><span class="n">23</span><span>Placa delantera</span><span class="bx"><input class="cb" type="checkbox" data-c="d22_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d22_no"></span></div>
+          <div class="it"><span class="n">24</span><span>Luna posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="d23_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d23_no"></span></div>
+          <div class="it"><span class="n">25</span><span>Faro posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="d24_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d24_no"></span></div>
+          <div class="it"><span class="n">26</span><span>Faro posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="d25_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d25_no"></span></div>
+          <div class="it"><span class="n">27</span><span>Panel posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="d26_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d26_no"></span></div>
+          <div class="it"><span class="n">28</span><span>Placa posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="d27_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d27_no"></span></div>
+          <div class="it"><span class="n">29</span><span>Tercera luz de freno</span><span class="bx"><input class="cb" type="checkbox" data-c="d28_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d28_no"></span></div>
+          <div class="it"><span class="n">30</span><span>Spoiler / alerón</span><span class="bx"><input class="cb" type="checkbox" data-c="d29_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="d29_no"></span></div>
+        </div>
+      </div>
 
     <div>
       <div class="barlabel izq">Observaciones / trabajo solicitado</div>
@@ -266,6 +445,7 @@
     <div class="firmas">
       <div>Firma del cliente</div>
       <div>Recibido por &ndash; ABARCA</div>
+    </div>
     </div>
   </div>
 </div>
