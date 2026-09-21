@@ -1,0 +1,184 @@
+const fs = require("fs");
+const {
+  Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell,
+  WidthType, ShadingType, AlignmentType, VerticalAlign, BorderStyle, PageOrientation, HeightRule,
+} = require("docx");
+
+const FONT = "Calibri", RED = "C00000", DARK = "1B1917", MUTED = "6E6660", RULE = "D9D3CD";
+const MARGEN = 726;          // 12.8 mm
+const CW = 10454;            // ancho util = 522.7 pt
+const ALTO_FILA = 290;       // 14.5 pt
+const AIRE = 196;            // 9.8 pt entre filas
+
+const NADA = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
+const sinBorde = { top: NADA, bottom: NADA, left: NADA, right: NADA };
+const fino = (c = RULE) => ({
+  top: { style: BorderStyle.SINGLE, size: 4, color: c }, bottom: { style: BorderStyle.SINGLE, size: 4, color: c },
+  left: { style: BorderStyle.SINGLE, size: 4, color: c }, right: { style: BorderStyle.SINGLE, size: 4, color: c },
+});
+const t = (text, o = {}) => new TextRun({ text, font: FONT, size: o.size || 24,
+  bold: !!o.bold, color: o.color || DARK });
+const p = (runs, o = {}) => new Paragraph({
+  children: Array.isArray(runs) ? runs : [runs], alignment: o.align,
+  spacing: { before: o.before === undefined ? 0 : o.before, after: o.after === undefined ? 0 : o.after },
+});
+const celda = (children, o = {}) => new TableCell({
+  children, width: { size: o.w, type: WidthType.DXA }, columnSpan: o.span,
+  shading: o.fill ? { type: ShadingType.CLEAR, color: "auto", fill: o.fill } : undefined,
+  borders: o.borders || sinBorde, verticalAlign: o.valign || VerticalAlign.CENTER,
+  margins: { top: 0, bottom: 0, left: o.mx === undefined ? 110 : o.mx, right: o.mx === undefined ? 110 : o.mx },
+});
+const tabla = (rows, widths) => new Table({ rows, columnWidths: widths,
+  width: { size: widths.reduce((a, b) => a + b, 0), type: WidthType.DXA } });
+const hueco = (n) => new Paragraph({ spacing: { before: 0, after: n }, children: [t("", { size: 2 })] });
+
+/* ---------- encabezado ---------- */
+const HW = [1250, 4084, 5120];   // 5120 dxa = 256 pt, la caja del RUC como en la referencia
+const encabezado = tabla([ new TableRow({ children: [
+  celda([new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 0, after: 0 }, children: [
+    new ImageRun({ type: "png", data: fs.readFileSync(__dirname + "/logo_abarca.png"),
+      transformation: { width: 72, height: 68 } })] })], { w: HW[0], mx: 0 }),
+  celda([
+    new Paragraph({ spacing: { before: 0, after: 0 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: RED, space: 1 } },
+      children: [t("ABARCA", { size: 46, bold: true, color: "262626" })] }),
+    new Paragraph({ spacing: { before: 30, after: 0 }, children: [t("Calidad, nuestra especialidad", { size: 19, color: MUTED })] }),
+  ], { w: HW[1] }),
+  celda([ new Table({ columnWidths: [5000], width: { size: 5000, type: WidthType.DXA }, rows: [
+    new TableRow({ children: [celda([p(t("RUC: 20612357421", { size: 26, bold: true, color: "FFFFFF" }),
+      { align: AlignmentType.CENTER, before: 60, after: 60 })], { w: 5000, fill: RED, borders: fino(RED) })] }),
+    new TableRow({ children: [celda([p(t("HOJA DE INGRESO VEHICULAR", { size: 26, bold: true }),
+      { align: AlignmentType.CENTER, before: 60, after: 60 })], { w: 5000, borders: fino(RED) })] }),
+  ]})], { w: HW[2], mx: 0 }),
+]})], HW);
+
+const contacto = (etiqueta, texto) => new Paragraph({ spacing: { before: 20, after: 20 }, children: [
+  new TextRun({ text: "●   ", font: FONT, size: 13, color: RED, bold: true }),
+  t(etiqueta, { bold: true, size: 20 }), t(" " + texto, { size: 20, color: MUTED }),
+]});
+
+const servicios = tabla([ new TableRow({ children: [celda([
+  p(t("Reparación de carrocería  |  Reparación de fibra de vidrio  |  Reconstrucción", { size: 20, color: MUTED }), { align: AlignmentType.CENTER, before: 50, after: 0 }),
+  p(t("Desabolladura  |  Reparación de rayones  |  Enderezado de chasis  |  Modificaciones, entre otros.", { size: 20, color: MUTED }), { align: AlignmentType.CENTER, before: 0, after: 50 }),
+], { w: CW, borders: fino() })]})], [CW]);
+
+/* ---------- filas de datos ---------- */
+const rot = (txt, w, sz) => celda([p(t(txt, { bold: true, size: sz || 22, color: "FFFFFF" }))],
+  { w, fill: "000000", mx: 55 });
+const val = (w) => celda([p(t("", { size: 22 }))], { w, borders: fino() });
+
+const filaDatos = (etiqueta, wRot, wVal) => new TableRow({
+  height: { value: ALTO_FILA, rule: HeightRule.ATLEAST },
+  children: [rot(etiqueta, wRot), val(wVal)] });
+const filaAire = (cols) => new TableRow({
+  height: { value: AIRE, rule: HeightRule.EXACT },
+  children: cols.map((w) => celda([p(t("", { size: 2 }))], { w })) });
+
+const RC = [1662, 8792];   // rotulo 83.1 pt
+const cliente = tabla([
+  filaDatos("FECHA:", RC[0], RC[1]), filaAire(RC),
+  filaDatos("CLIENTE:", RC[0], RC[1]), filaAire(RC),
+  filaDatos("DNI/RUC:", RC[0], RC[1]), filaAire(RC),
+  filaDatos("TELÉFONO:", RC[0], RC[1]),
+], RC);
+
+const barra = (txt, align) => tabla([ new TableRow({
+  height: { value: 284, rule: HeightRule.EXACT },
+  children: [celda([p(t(txt, { bold: true, size: 22, color: "FFFFFF" }), { align })],
+    { w: CW, fill: "000000" })] })], [CW]);
+
+const RV = [1100, 4104, 1180, 4070];   // marca 55 pt, modelo 59 pt
+const filaVeh = (a, b) => new TableRow({
+  height: { value: ALTO_FILA, rule: HeightRule.ATLEAST },
+  children: [rot(a, RV[0], 18), val(RV[1]), rot(b, RV[2], 18), val(RV[3])] });
+const vehiculo = tabla([ filaVeh("MARCA:", "MODELO:"), filaAire(RV), filaVeh("TIPO:", "PLACA:") ], RV);
+
+/* ---------- tablero de partes ---------- */
+const partes = [
+  "Parachoques delantero","Capó","Parrilla","Faro delantero izq.","Faro delantero der.",
+  "Parabrisas delantero","Guardafango del. izq.","Guardafango del. der.","Techo","Aros / llantas",
+  "Chasis","Pintura general",
+  "Puerta delantera izq.","Puerta posterior izq.","Panel lateral izq.","Estribo izquierdo",
+  "Espejo izquierdo","Baranda lateral izq.","Puerta delantera der.","Puerta posterior der.",
+  "Panel lateral der.","Estribo derecho","Espejo derecho","Baranda lateral der.",
+  "Parachoques posterior","Maletera / tapa post.","Panel posterior izq.","Panel posterior der.",
+  "Guardafango post. izq.","Guardafango post. der.","Faro posterior izq.","Faro posterior der.",
+  "Luna posterior","Baranda posterior","Placa posterior","Lunas laterales",
+];
+const GP = 2445, GS = 420, GG = 300;
+const TW = [GP, GS, GS, GG, GP, GS, GS, GG, GP, GS, GS];
+const punteado = { top: NADA, left: NADA, right: NADA,
+  bottom: { style: BorderStyle.DOTTED, size: 4, color: RULE } };
+const cajita = () => celda([p(t("☐", { size: 20 }), { align: AlignmentType.CENTER })],
+  { w: GS, borders: punteado, mx: 0 });
+
+const cabTablero = new TableRow({ children: [].concat(...[0, 1, 2].map((i) => {
+  const c = [
+    celda([p(t("PARTE", { bold: true, size: 16, color: MUTED }))], { w: GP, borders: { ...punteado, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } }, mx: 0 }),
+    celda([p(t("SÍ", { bold: true, size: 16, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: { ...punteado, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } }, mx: 0 }),
+    celda([p(t("NO", { bold: true, size: 16, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: { ...punteado, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } }, mx: 0 }),
+  ];
+  return i < 2 ? c.concat([celda([p(t(""))], { w: GG, mx: 0 })]) : c;
+})) });
+
+const filasTablero = [cabTablero];
+for (let f = 0; f < 12; f++) {
+  const hijos = [];
+  [0, 1, 2].forEach((c) => {
+    hijos.push(celda([p(t(partes[c * 12 + f], { size: 17 }))], { w: GP, borders: punteado, mx: 0 }));
+    hijos.push(cajita()); hijos.push(cajita());
+    if (c < 2) hijos.push(celda([p(t(""))], { w: GG, mx: 0 }));
+  });
+  filasTablero.push(new TableRow({ height: { value: 250, rule: HeightRule.ATLEAST }, children: hijos }));
+}
+const tablero = tabla([ new TableRow({ children: [celda([
+  p(t("Marcar Sí si la parte ingresa con daño, No si está conforme. El detalle del daño va en observaciones.",
+    { size: 16, color: MUTED }), { after: 90 }),
+  tabla(filasTablero, TW),
+], { w: CW, borders: fino(), mx: 150 })]})], [CW]);
+
+/* ---------- observaciones, nota y firmas ---------- */
+const lineaObs = () => new TableRow({ height: { value: 280, rule: HeightRule.EXACT },
+  children: [celda([p(t("", { size: 22 }))], { w: CW - 300,
+    borders: { ...sinBorde, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } }, mx: 30 })] });
+const observaciones = tabla([ new TableRow({ children: [celda(
+  [tabla([lineaObs(), lineaObs(), lineaObs(), lineaObs()], [CW - 300])],
+  { w: CW, borders: fino(), mx: 150 })]})], [CW]);
+
+const legal = new Paragraph({ spacing: { before: 120, after: 0 }, children: [
+  t("El cliente declara que los datos y el estado de las partes consignados en esta hoja corresponden al vehículo al momento de su ingreso. ABARCA no se responsabiliza por dinero, documentos u objetos de valor dejados en el interior del vehículo.",
+    { size: 14, color: MUTED })] });
+
+const FW = [4700, 1054, 4700];
+const linea = (txt, w) => celda([
+  new Paragraph({ spacing: { before: 0, after: 0 },
+    border: { top: { style: BorderStyle.SINGLE, size: 6, color: "CFC7C0", space: 1 } }, children: [t("")] }),
+  p(t(txt, { size: 16, color: MUTED }), { align: AlignmentType.CENTER }),
+], { w, valign: VerticalAlign.BOTTOM });
+const firmas = tabla([ new TableRow({ children: [
+  linea("Firma del cliente", FW[0]), celda([p(t(""))], { w: FW[1] }), linea("Recibido por – ABARCA", FW[2]),
+]})], FW);
+
+const doc = new Document({
+  styles: { default: { document: { run: { font: FONT, size: 22, color: DARK } } } },
+  sections: [{
+    properties: { page: { size: { orientation: PageOrientation.PORTRAIT },
+      margin: { top: MARGEN, bottom: MARGEN, left: MARGEN, right: MARGEN } } },
+    children: [
+      encabezado, hueco(80),
+      contacto("LOCAL SANTA ROSA:", "AV. SANTA ROSA LT. 3 MZ. U, URB. SEMIRÚSTICA CERRO GRANDE – SJL"),
+      contacto("TELÉFONO:", "+51 934 965 098  /  +51 973 219 397"),
+      hueco(110), servicios, hueco(150),
+      cliente, hueco(150),
+      barra("DATOS DEL VEHÍCULO", AlignmentType.CENTER), hueco(110), vehiculo, hueco(150),
+      barra("PARTES DAÑADAS — MARCAR SÍ O NO", AlignmentType.LEFT), hueco(60), tablero, hueco(150),
+      barra("OBSERVACIONES / TRABAJO SOLICITADO", AlignmentType.LEFT), hueco(60), observaciones,
+      legal, hueco(200), firmas,
+    ],
+  }],
+});
+
+Packer.toBuffer(doc).then((buf) => {
+  fs.writeFileSync(__dirname + "/art/Hoja-Ingreso-Vehicular-ABARCA.docx", buf);
+  console.log("OK", buf.length, "bytes");
+});
