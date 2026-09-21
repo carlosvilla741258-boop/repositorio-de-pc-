@@ -22,7 +22,7 @@ El PDF sale imprimiendo la página web (botón *Imprimir / PDF*).
 ## Hoja de ingreso vehicular
 
 `hoja-ingreso.html` es la hoja con la que se recibe un vehiculo en el taller:
-datos del cliente y del vehiculo, nivel de combustible, croquis en cinco
-vistas para marcar los danos, inventario e observaciones. Se puede llenar
+datos del cliente y del vehiculo, nivel de combustible, un tablero de 36
+partes para marcar Si/No segun ingresen danadas, y observaciones. Se puede llenar
 en pantalla o imprimir en blanco y llenar a mano. No usa generador: es un
 archivo suelto, se edita directamente.

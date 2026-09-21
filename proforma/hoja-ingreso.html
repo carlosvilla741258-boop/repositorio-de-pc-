@@ -76,23 +76,6 @@
   .sheet .f[contenteditable]{background:var(--field);box-shadow:inset 0 -1px 0 var(--field-line)}
   .sheet .f[contenteditable]:focus{background:var(--fill);box-shadow:inset 0 -2px 0 var(--brand)}
 
-  /* croquis */
-  .croquis{border:1px solid var(--rule);padding:7px 10px 9px}
-  .leyenda{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:10.5px;color:var(--muted);
-           margin:0 0 6px;align-items:baseline}
-  .leyenda b{font-family:var(--mono);font-weight:600;color:var(--brand);font-size:11.5px}
-  .vistas{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-  .vistas.tres{grid-template-columns:1fr 1fr 1fr;margin-top:6px}
-  .vista{border:1px solid var(--rule);border-radius:2px;padding:4px 6px 2px;
-         display:flex;flex-direction:column;align-items:center}
-  .vista.ancha{grid-column:1/-1}
-  .vista h4{margin:0 0 1px;align-self:flex-start;font-family:var(--cond);font-weight:600;
-            font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
-  .vista svg{height:76px;width:auto;max-width:100%;display:block}
-  .dib{fill:none;stroke:var(--ink);stroke-width:1.3;stroke-linejoin:round;stroke-linecap:round}
-  .dib .rueda{fill:var(--paper)}
-  .dib .tenue{stroke:var(--muted);stroke-width:1}
-
   /* combustible e inventario */
   .franja{display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;
           border:1px solid var(--rule);padding:6px 11px;font-size:12.5px}
@@ -106,14 +89,20 @@
   .cb:checked{background:var(--ink);border-color:var(--ink);
     background-image:linear-gradient(45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%),
                      linear-gradient(-45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%)}
-  .inv{display:grid;grid-template-columns:repeat(3,1fr);gap:0 18px;
-       border:1px solid var(--rule);padding:6px 10px 8px}
-  .inv .it{display:grid;grid-template-columns:1fr auto auto;gap:9px;align-items:center;
-           font-size:11px;padding:1.5px 0;border-bottom:1px dotted var(--rule)}
-  .inv .it:nth-last-child(-n+3){border-bottom:0}
-  .inv .it .si,.inv .it .no{display:inline-flex;align-items:center;gap:4px;
-                            font-size:10.5px;color:var(--muted);text-transform:uppercase;
-                            font-family:var(--cond);font-weight:600;letter-spacing:.06em}
+  .tablero{border:1px solid var(--rule);padding:8px 11px 10px}
+  .tablero .ayuda{margin:0 0 8px;font-size:11px;color:var(--muted)}
+  .tablero .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0 22px;
+                 grid-auto-flow:column;grid-template-rows:repeat(13,auto)}
+  .tablero .cab,.tablero .it{display:grid;grid-template-columns:1fr 30px 30px;
+                             gap:6px;align-items:center}
+  .tablero .cab{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;
+                text-transform:uppercase;color:var(--muted);padding-bottom:3px;
+                border-bottom:1px solid var(--rule)}
+  .tablero .cab span+span,.tablero .it .bx{text-align:center}
+  .tablero .it{font-size:11.5px;padding:2.5px 0;border-bottom:1px dotted var(--rule)}
+  .tablero .it>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tablero .it:nth-last-child(-n+1){border-bottom:0}
+  .tablero .bx{display:flex;justify-content:center}
 
   /* observaciones y firmas */
   .obs{border:1px solid var(--rule);padding:8px 11px 10px}
@@ -134,7 +123,7 @@
            zoom:1 !important;width:auto !important}
     .sheet .f[contenteditable]{background:none !important;box-shadow:none !important}
     .franja .f{border-bottom:1px solid #B9B2AB}
-    .croquis,.vista,.inv,.obs,.franja{break-inside:avoid}
+    .tablero,.obs,.franja{break-inside:avoid}
     .barlabel,.rucbox .ruc,.grid>.k,.cb:checked{
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
@@ -202,77 +191,66 @@
     </div>
 
     <div>
-      <div class="barlabel">Estado del vehículo &mdash; marcar sobre el croquis</div>
-      <div class="croquis">
-        <p class="leyenda">
-          <span><b>R</b> rayón</span><span><b>A</b> abolladura</span><span><b>G</b> golpe</span>
-          <span><b>F</b> faltante</span><span><b>O</b> óxido</span><span><b>Q</b> roto / trizado</span>
-          <span><b>P</b> pintura saltada</span>
-        </p>
-        <div class="vistas">
-          <div class="vista"><h4>Lateral izquierdo</h4>
-            <svg viewBox="0 0 210 88" role="img" aria-label="Vista lateral izquierda"><path class="dib" d="M12 64 L12 50 C12 45 15 42 20 41 L60 36 L82 18 C86 15 90 14 95 14 L136 14 C142 14 147 16 150 20 L166 38 L190 43 C195 44 198 47 198 52 L198 64 Z"/>
-      <path class="dib tenue" d="M86 34 L101 20 L118 20 L118 34 Z"/>
-      <path class="dib tenue" d="M124 20 L140 20 L152 34 L124 34 Z"/>
-      <path class="dib tenue" d="M121 34 L121 62"/>
-      <path class="dib tenue" d="M12 56 L60 54"/>
-      <circle class="dib rueda" cx="54" cy="64" r="13"/>
-      <circle class="dib rueda" cx="160" cy="64" r="13"/>
-      <path class="dib tenue" d="M6 79 L204 79"/></svg></div>
-          <div class="vista"><h4>Lateral derecho</h4>
-            <svg viewBox="0 0 210 88" role="img" aria-label="Vista lateral derecha">
-              <g transform="translate(210,0) scale(-1,1)"><path class="dib" d="M12 64 L12 50 C12 45 15 42 20 41 L60 36 L82 18 C86 15 90 14 95 14 L136 14 C142 14 147 16 150 20 L166 38 L190 43 C195 44 198 47 198 52 L198 64 Z"/>
-      <path class="dib tenue" d="M86 34 L101 20 L118 20 L118 34 Z"/>
-      <path class="dib tenue" d="M124 20 L140 20 L152 34 L124 34 Z"/>
-      <path class="dib tenue" d="M121 34 L121 62"/>
-      <path class="dib tenue" d="M12 56 L60 54"/>
-      <circle class="dib rueda" cx="54" cy="64" r="13"/>
-      <circle class="dib rueda" cx="160" cy="64" r="13"/>
-      <path class="dib tenue" d="M6 79 L204 79"/></g></svg></div>
-        </div>
-        <div class="vistas tres">
-          <div class="vista"><h4>Frontal</h4><svg viewBox="0 0 130 88" role="img" aria-label="Vista frontal"><path class="dib" d="M22 70 L22 42 C22 36 25 32 30 30 L38 17 C40 14 43 13 46 13 L84 13 C87 13 90 14 92 17 L100 30 C105 32 108 36 108 42 L108 70 Z"/>
-      <path class="dib tenue" d="M40 30 L46 18 L84 18 L90 30 Z"/>
-      <rect class="dib tenue" x="27" y="44" width="17" height="7" rx="2"/>
-      <rect class="dib tenue" x="86" y="44" width="17" height="7" rx="2"/>
-      <path class="dib tenue" d="M22 58 L108 58"/>
-      <rect class="dib tenue" x="53" y="60" width="24" height="8" rx="1"/></svg></div>
-          <div class="vista"><h4>Posterior</h4><svg viewBox="0 0 130 88" role="img" aria-label="Vista posterior"><path class="dib" d="M22 70 L22 42 C22 36 25 32 30 30 L34 16 C36 13 39 12 42 12 L88 12 C91 12 94 13 96 16 L100 30 C105 32 108 36 108 42 L108 70 Z"/>
-      <path class="dib tenue" d="M36 30 L40 17 L90 17 L94 30 Z"/>
-      <rect class="dib tenue" x="27" y="42" width="15" height="9" rx="2"/>
-      <rect class="dib tenue" x="88" y="42" width="15" height="9" rx="2"/>
-      <path class="dib tenue" d="M22 58 L108 58"/>
-      <rect class="dib tenue" x="53" y="60" width="24" height="8" rx="1"/></svg></div>
-          <div class="vista"><h4>Vista superior &mdash; frente a la izq.</h4><svg viewBox="0 0 230 104" role="img" aria-label="Vista superior"><rect class="dib" x="22" y="18" width="186" height="68" rx="20"/>
-      <path class="dib tenue" d="M78 18 L78 86"/>
-      <path class="dib tenue" d="M158 18 L158 86"/>
-      <rect class="dib tenue" x="84" y="28" width="68" height="48" rx="7"/>
-      <path class="dib tenue" d="M118 28 L118 76"/>
-      <rect class="dib rueda" x="44" y="12" width="24" height="9" rx="3"/>
-      <rect class="dib rueda" x="44" y="83" width="24" height="9" rx="3"/>
-      <rect class="dib rueda" x="164" y="12" width="24" height="9" rx="3"/>
-      <rect class="dib rueda" x="164" y="83" width="24" height="9" rx="3"/>
-      <path class="dib tenue" d="M80 16 L73 10"/>
-      <path class="dib tenue" d="M80 88 L73 94"/>
-      </svg></div>
+      <div class="barlabel">Partes dañadas &mdash; marcar sí o no</div>
+      <div class="tablero">
+        <p class="ayuda">Marcar <b>Sí</b> si la parte ingresa con daño, <b>No</b> si está conforme.
+        El detalle del daño va en observaciones.</p>
+        <div class="cols">
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Parachoques delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p0_no"></span></div>
+          <div class="it"><span>Capó</span><span class="bx"><input class="cb" type="checkbox" data-c="p1_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p1_no"></span></div>
+          <div class="it"><span>Parrilla</span><span class="bx"><input class="cb" type="checkbox" data-c="p2_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p2_no"></span></div>
+          <div class="it"><span>Faro delantero izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p3_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p3_no"></span></div>
+          <div class="it"><span>Faro delantero der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p4_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p4_no"></span></div>
+          <div class="it"><span>Parabrisas delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p5_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p5_no"></span></div>
+          <div class="it"><span>Guardafango del. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p6_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p6_no"></span></div>
+          <div class="it"><span>Guardafango del. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p7_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p7_no"></span></div>
+          <div class="it"><span>Techo</span><span class="bx"><input class="cb" type="checkbox" data-c="p8_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p8_no"></span></div>
+          <div class="it"><span>Aros / llantas</span><span class="bx"><input class="cb" type="checkbox" data-c="p9_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p9_no"></span></div>
+          <div class="it"><span>Chasis</span><span class="bx"><input class="cb" type="checkbox" data-c="p10_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p10_no"></span></div>
+          <div class="it"><span>Pintura general</span><span class="bx"><input class="cb" type="checkbox" data-c="p11_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p11_no"></span></div>
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Puerta delantera izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p12_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p12_no"></span></div>
+          <div class="it"><span>Puerta posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p13_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p13_no"></span></div>
+          <div class="it"><span>Panel lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p14_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p14_no"></span></div>
+          <div class="it"><span>Estribo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p15_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p15_no"></span></div>
+          <div class="it"><span>Espejo izquierdo</span><span class="bx"><input class="cb" type="checkbox" data-c="p16_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p16_no"></span></div>
+          <div class="it"><span>Baranda lateral izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p17_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p17_no"></span></div>
+          <div class="it"><span>Puerta delantera der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p18_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p18_no"></span></div>
+          <div class="it"><span>Puerta posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p19_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p19_no"></span></div>
+          <div class="it"><span>Panel lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p20_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p20_no"></span></div>
+          <div class="it"><span>Estribo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p21_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p21_no"></span></div>
+          <div class="it"><span>Espejo derecho</span><span class="bx"><input class="cb" type="checkbox" data-c="p22_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p22_no"></span></div>
+          <div class="it"><span>Baranda lateral der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p23_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p23_no"></span></div>
+          <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
+          <div class="it"><span>Parachoques posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p24_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p24_no"></span></div>
+          <div class="it"><span>Maletera / tapa post.</span><span class="bx"><input class="cb" type="checkbox" data-c="p25_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p25_no"></span></div>
+          <div class="it"><span>Panel posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p26_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p26_no"></span></div>
+          <div class="it"><span>Panel posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p27_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p27_no"></span></div>
+          <div class="it"><span>Guardafango post. izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p28_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p28_no"></span></div>
+          <div class="it"><span>Guardafango post. der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p29_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p29_no"></span></div>
+          <div class="it"><span>Faro posterior izq.</span><span class="bx"><input class="cb" type="checkbox" data-c="p30_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p30_no"></span></div>
+          <div class="it"><span>Faro posterior der.</span><span class="bx"><input class="cb" type="checkbox" data-c="p31_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p31_no"></span></div>
+          <div class="it"><span>Luna posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p32_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p32_no"></span></div>
+          <div class="it"><span>Baranda posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p33_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p33_no"></span></div>
+          <div class="it"><span>Placa posterior</span><span class="bx"><input class="cb" type="checkbox" data-c="p34_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p34_no"></span></div>
+          <div class="it"><span>Lunas laterales</span><span class="bx"><input class="cb" type="checkbox" data-c="p35_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p35_no"></span></div>
         </div>
       </div>
     </div>
 
-    <div>
-      <div class="barlabel">Inventario del vehículo</div>
-      <div class="inv"><div class="it"><span>Llanta de repuesto</span><label class="si"><input class="cb" type="checkbox" data-c="repuesto_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="repuesto_no">No</label></div><div class="it"><span>Gata</span><label class="si"><input class="cb" type="checkbox" data-c="gata_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="gata_no">No</label></div><div class="it"><span>Llave de ruedas</span><label class="si"><input class="cb" type="checkbox" data-c="llaveruedas_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="llaveruedas_no">No</label></div><div class="it"><span>Herramientas</span><label class="si"><input class="cb" type="checkbox" data-c="herramientas_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="herramientas_no">No</label></div><div class="it"><span>Extintor</span><label class="si"><input class="cb" type="checkbox" data-c="extintor_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="extintor_no">No</label></div><div class="it"><span>Triángulo de seguridad</span><label class="si"><input class="cb" type="checkbox" data-c="triangulo_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="triangulo_no">No</label></div><div class="it"><span>Botiquín</span><label class="si"><input class="cb" type="checkbox" data-c="botiquin_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="botiquin_no">No</label></div><div class="it"><span>Plumillas</span><label class="si"><input class="cb" type="checkbox" data-c="plumillas_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="plumillas_no">No</label></div><div class="it"><span>Radio / autoestéreo</span><label class="si"><input class="cb" type="checkbox" data-c="radio_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="radio_no">No</label></div><div class="it"><span>Espejos laterales</span><label class="si"><input class="cb" type="checkbox" data-c="espejos_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="espejos_no">No</label></div><div class="it"><span>Tapas de ruedas</span><label class="si"><input class="cb" type="checkbox" data-c="tapas_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="tapas_no">No</label></div><div class="it"><span>Alfombras / pisos</span><label class="si"><input class="cb" type="checkbox" data-c="alfombras_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="alfombras_no">No</label></div><div class="it"><span>Tarjeta de propiedad</span><label class="si"><input class="cb" type="checkbox" data-c="tarjeta_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="tarjeta_no">No</label></div><div class="it"><span>SOAT</span><label class="si"><input class="cb" type="checkbox" data-c="soat_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="soat_no">No</label></div><div class="it"><span>Llaves de contacto</span><label class="si"><input class="cb" type="checkbox" data-c="llaves_si">Sí</label><label class="no"><input class="cb" type="checkbox" data-c="llaves_no">No</label></div></div>
-    </div>
 
     <div>
       <div class="barlabel">Observaciones / trabajo solicitado</div>
       <div class="obs">
         <span class="lin f" contenteditable="plaintext-only" data-k="obs1"></span>
         <span class="lin f" contenteditable="plaintext-only" data-k="obs2"></span>
+        <span class="lin f" contenteditable="plaintext-only" data-k="obs3"></span>
+        <span class="lin f" contenteditable="plaintext-only" data-k="obs4"></span>
       </div>
     </div>
 
-    <p class="legal">El cliente declara que los datos, el inventario y el estado consignados en esta hoja
+    <p class="legal">El cliente declara que los datos y el estado de las partes consignados en esta hoja
     corresponden al vehículo al momento de su ingreso. ABARCA no se responsabiliza por dinero,
     documentos u objetos de valor dejados en el interior del vehículo.</p>
 
