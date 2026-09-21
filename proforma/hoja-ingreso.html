@@ -13,7 +13,7 @@
   }
   *{box-sizing:border-box}
   html{background:var(--ground)}
-  body{background:var(--ground);color:var(--ink);font-family:var(--sans);
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
        font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
   .wrap{padding:20px 16px 64px;max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 
@@ -33,7 +33,8 @@
   .note.ok{color:var(--brand);font-weight:500}
 
   .sheet{background:var(--paper);box-shadow:var(--shadow);border-radius:3px;
-         padding:24px 26px 22px;display:flex;flex-direction:column;gap:7px}
+         width:794px;max-width:100%;margin:0 auto;
+         padding:26pt 36.3pt 12pt;display:flex;flex-direction:column;gap:5px}
 
   /* encabezado */
   .head{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
@@ -41,13 +42,13 @@
   .name{font-family:var(--cond);font-weight:700;font-size:34px;line-height:.92;
         text-transform:uppercase;border-bottom:2.5px solid var(--brand);padding-bottom:3px;margin:0}
   .tag{font-size:12px;color:var(--muted);margin:4px 0 0}
-  .rucbox{border:1.5px solid var(--brand);border-radius:2px;min-width:250px;overflow:hidden}
+  .rucbox{border:1.5px solid var(--brand);border-radius:2px;width:255.9pt;overflow:hidden}
   .rucbox .ruc{background:var(--brand);color:#fff;font-family:var(--mono);font-weight:600;
                font-size:14px;text-align:center;padding:6px 10px}
   .rucbox .kind{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.07em;
                 text-transform:uppercase;text-align:center;padding:5px 8px;line-height:1.1}
 
-  .locales{display:flex;flex-direction:column;gap:2px;font-size:12px}
+  .locales{display:flex;flex-direction:column;gap:2px;font-size:10pt}
   .locales p{margin:0;display:flex;gap:8px;align-items:baseline}
   .locales .dot{color:var(--brand);font-size:8px;line-height:1.7;flex:none}
   .locales b{font-weight:600}
@@ -58,22 +59,23 @@
 
   /* barras de seccion y filas de datos, como en el documento del taller */
   .barlabel{background:var(--bar);color:var(--bar-ink);font-family:var(--cond);font-weight:600;
-            font-size:14.5px;letter-spacing:.13em;text-transform:uppercase;padding:4px 11px;
-            text-align:center}
-  .barlabel.izq{text-align:left}
-  .filas{display:flex;flex-direction:column;gap:5px}
-  .fila{display:flex;align-items:stretch}
+            font-size:14.5px;letter-spacing:.13em;text-transform:uppercase;
+            min-height:14pt;padding:1.6pt 5.5pt;line-height:1;display:flex;align-items:center;
+            justify-content:center}
+  .barlabel.izq{justify-content:flex-start}
+  .filas{display:flex;flex-direction:column;gap:9.8pt}
+  .fila{display:flex;align-items:stretch;min-height:14.5pt}
   .fila .rot{background:var(--bar);color:var(--bar-ink);font-family:var(--cond);font-weight:600;
              font-size:13.5px;letter-spacing:.08em;text-transform:uppercase;
-             padding:4px 10px;display:flex;align-items:center;white-space:nowrap;
-             min-width:116px;flex:none}
-  .fila .rot.corto{min-width:96px}
+             padding:2.2pt 5.5pt;line-height:1;display:flex;align-items:center;white-space:nowrap;
+             width:83.1pt;flex:none}
+  .fila .rot.m1{width:55pt}
+  .fila .rot.m2{width:59pt}
   .fila .val{flex:1;min-width:0;border:1px solid var(--rule);border-left:0;
-             padding:4px 9px;font-size:12.5px;display:flex;align-items:center;min-height:24px}
-  .fila .rot+.rot{margin-left:9px}
+             padding:2.2pt 5.5pt;line-height:1;font-size:12.5px;display:flex;align-items:center}
 
-  .servicios{border:1px solid var(--rule);border-radius:2px;padding:6px 12px;text-align:center;
-             font-size:11.5px;color:var(--muted);line-height:1.55}
+  .servicios{border:1px solid var(--rule);border-radius:2px;padding:4pt 9pt;text-align:center;
+             font-size:10pt;color:var(--muted);line-height:1.5}
 
   /* campos escribibles */
   .f{outline:0}
@@ -114,17 +116,17 @@
             padding:1px 2px;font-size:12px}
   .obs .lin:last-child{border-bottom:0}
   .legal{font-size:9.5px;color:var(--muted);line-height:1.5;margin:0}
-  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:10px}
+  .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:6px}
   .firmas div{border-top:1px solid var(--field-line);padding-top:6px;text-align:center;
               font-size:11px;color:var(--muted)}
 
   @media print{
-    @page{size:A4;margin:10mm}
+    @page{size:A4;margin:12.8mm}
     body{background:#fff;color:#000}
     .bar{display:none !important}
     .wrap{padding:0;max-width:none;gap:0}
     .sheet{box-shadow:none;padding:0;border-radius:0;background:#fff;
-           zoom:1 !important;width:auto !important}
+           zoom:1 !important;width:auto !important;max-width:none}
     .sheet .f[contenteditable]{background:none !important;box-shadow:none !important}
     .franja .f{border-bottom:1px solid #B9B2AB}
     .tablero,.obs,.franja{break-inside:avoid}
@@ -173,8 +175,8 @@
 
     <div class="filas">
       <div class="barlabel">Datos del vehículo</div>
-      <div class="fila"><span class="rot corto">Marca:</span><span class="val f" contenteditable="plaintext-only" data-k="marca"></span><span class="rot corto">Modelo:</span><span class="val f" contenteditable="plaintext-only" data-k="modelo"></span></div>
-      <div class="fila"><span class="rot corto">Tipo:</span><span class="val f" contenteditable="plaintext-only" data-k="tipo"></span><span class="rot corto">Placa:</span><span class="val f" contenteditable="plaintext-only" data-k="placa"></span></div>
+      <div class="fila"><span class="rot m1">Marca:</span><span class="val f" contenteditable="plaintext-only" data-k="marca"></span><span class="rot m2">Modelo:</span><span class="val f" contenteditable="plaintext-only" data-k="modelo"></span></div>
+      <div class="fila"><span class="rot m1">Tipo:</span><span class="val f" contenteditable="plaintext-only" data-k="tipo"></span><span class="rot m2">Placa:</span><span class="val f" contenteditable="plaintext-only" data-k="placa"></span></div>
     </div>
 
     <div>
@@ -354,7 +356,7 @@
 
   window.addEventListener("beforeunload", function(e){ if(dirty){ e.preventDefault(); e.returnValue = ""; } });
 
-  var DISENO = 760;   // ancho de la hoja; en pantalla angosta se reduce entera
+  var DISENO = 794;   // ancho de la hoja; en pantalla angosta se reduce entera
   function ajustar(){
     var wrap = document.querySelector(".wrap");
     if(!wrap) return;
