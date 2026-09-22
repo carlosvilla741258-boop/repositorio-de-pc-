@@ -34,12 +34,12 @@
 
   .sheet{background:var(--paper);box-shadow:var(--shadow);border-radius:3px;
          width:794px;max-width:100%;margin:0 auto;
-         padding:26pt 36.3pt 12pt;display:flex;flex-direction:column;gap:5px}
+         padding:22pt 36.3pt 5pt;display:flex;flex-direction:column;gap:3px}
 
   /* encabezado */
   .head{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
-  .head img{width:54px;height:auto;display:block}
-  .name{font-family:var(--cond);font-weight:700;font-size:34px;line-height:.92;
+  .head img{width:48px;height:auto;display:block}
+  .name{font-family:var(--cond);font-weight:700;font-size:30px;line-height:.92;
         text-transform:uppercase;border-bottom:2.5px solid var(--brand);padding-bottom:3px;margin:0}
   .tag{font-size:12px;color:var(--muted);margin:4px 0 0}
   .rucbox{border:1.5px solid var(--brand);border-radius:2px;width:255.9pt;overflow:hidden}
@@ -95,19 +95,19 @@
   .cb:checked{background:var(--ink);border-color:var(--ink);
     background-image:linear-gradient(45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%),
                      linear-gradient(-45deg,transparent 42%,var(--paper) 42%,var(--paper) 58%,transparent 58%)}
-  .tablero{border:1px solid var(--rule);padding:6px 11px 7px}
+  .tablero{border:1px solid var(--rule);padding:5px 11px 6px}
   .tablero .ayuda{margin:0 0 6px;font-size:11px;color:var(--muted)}
   .tablero .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0 22px;
                  grid-auto-flow:column;grid-template-rows:repeat(13,auto)}
   .tablero .cols{grid-template-rows:repeat(15,auto)}
   .tablero .cols.interior{grid-template-rows:repeat(7,auto)}
-  .tablero .cab,.tablero .it{display:grid;grid-template-columns:1fr 30px 30px;
+  .tablero .cab,.tablero .it{display:grid;grid-template-columns:1fr 28px 28px;
                              gap:6px;align-items:center}
   .tablero .cab{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;
-                text-transform:uppercase;color:var(--muted);padding-bottom:2px;
+                text-transform:uppercase;color:var(--muted);padding-bottom:1px;
                 border-bottom:1px solid var(--rule)}
   .tablero .cab span+span,.tablero .it .bx{text-align:center}
-  .tablero .it{font-size:11.5px;padding:1.5px 0;border-bottom:1px dotted var(--rule)}
+  .tablero .it{font-size:11px;padding:0.5px 0;border-bottom:1px dotted var(--rule)}
   .tablero .it>span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tablero .it:nth-last-child(-n+1){border-bottom:0}
   .tablero .bx{display:flex;justify-content:center}
@@ -149,13 +149,15 @@
 
   /* observaciones y firmas */
   .obs{border:1px solid var(--rule);padding:6px 11px 7px}
-  .obs .lin{display:block;min-height:26px;border-bottom:1px solid var(--rule);
-            padding:1px 2px;font-size:12px}
+  .obs .lin{display:grid;grid-template-columns:18px 1fr;align-items:end;min-height:33px;
+            border-bottom:1px solid var(--rule);padding:1px 2px;font-size:12px}
   .obs .lin:last-child{border-bottom:0}
-  .legal{font-size:9px;color:var(--muted);line-height:1.35;margin:0}
+  .obs .lin .n{font-family:var(--mono);font-size:10px;color:var(--muted);padding-bottom:2px}
+  .obs .lin .f{min-height:30px}
+  .legal{font-size:8px;color:var(--muted);line-height:1.3;margin:0}
   .firmas{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:2px}
-  .firmas div{border-top:1px solid var(--field-line);padding-top:4px;text-align:center;
-              font-size:10px;color:var(--muted)}
+  .firmas div{border-top:1px solid var(--field-line);padding-top:3px;text-align:center;
+              font-size:9.5px;color:var(--muted)}
 
   @media print{
     @page{size:A4;margin:12.8mm}
@@ -218,8 +220,6 @@
     <div>
       <div class="barlabel izq">Partes dañadas &mdash; exterior</div>
       <div class="tablero">
-        <p class="ayuda">Marcar <b>Sí</b> si la parte ingresa con daño, <b>No</b> si está conforme.
-        El detalle del daño va en observaciones.</p>
         <div class="cols">
           <div class="cab"><span>Parte</span><span>Sí</span><span>No</span></div>
           <div class="it"><span>Parachoques delantero</span><span class="bx"><input class="cb" type="checkbox" data-c="p0_si"></span><span class="bx"><input class="cb" type="checkbox" data-c="p0_no"></span></div>
@@ -301,8 +301,10 @@
     <div>
       <div class="barlabel izq">Observaciones / trabajo solicitado</div>
       <div class="obs">
-        <span class="lin f" contenteditable="plaintext-only" data-k="obs1"></span>
-        <span class="lin f" contenteditable="plaintext-only" data-k="obs3"></span>
+        <div class="lin"><span class="n">1.</span><span class="f" contenteditable="plaintext-only" data-k="obs1"></span></div>
+        <div class="lin"><span class="n">2.</span><span class="f" contenteditable="plaintext-only" data-k="obs2"></span></div>
+        <div class="lin"><span class="n">3.</span><span class="f" contenteditable="plaintext-only" data-k="obs3"></span></div>
+        <div class="lin"><span class="n">4.</span><span class="f" contenteditable="plaintext-only" data-k="obs4"></span></div>
       </div>
     </div>
 

@@ -144,15 +144,15 @@ const GP = 2445, GS = 420, GG = 300;
 const TW = [GP, GS, GS, GG, GP, GS, GS, GG, GP, GS, GS];
 const punteado = { top: NADA, left: NADA, right: NADA,
   bottom: { style: BorderStyle.DOTTED, size: 4, color: RULE } };
-const cajita = () => celda([p(t("☐", { size: 16 }), { align: AlignmentType.CENTER, linea: 150 })],
+const cajita = () => celda([p(t("☐", { size: 18 }), { align: AlignmentType.CENTER, linea: 150 })],
   { w: GS, borders: punteado, mx: 0 });
 
 const cabTablero = () => new TableRow({ children: [].concat(...[0, 1, 2].map((i) => {
   const bordeCab = { ...punteado, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } };
   const c = [
-    celda([p(t("PARTE", { bold: true, size: 14, color: MUTED }))], { w: GP, borders: bordeCab, mx: 0 }),
-    celda([p(t("SÍ", { bold: true, size: 14, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: bordeCab, mx: 0 }),
-    celda([p(t("NO", { bold: true, size: 14, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: bordeCab, mx: 0 }),
+    celda([p(t("PARTE", { bold: true, size: 15, color: MUTED }))], { w: GP, borders: bordeCab, mx: 0 }),
+    celda([p(t("SÍ", { bold: true, size: 15, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: bordeCab, mx: 0 }),
+    celda([p(t("NO", { bold: true, size: 15, color: MUTED }), { align: AlignmentType.CENTER })], { w: GS, borders: bordeCab, mx: 0 }),
   ];
   return i < 2 ? c.concat([celda([p(t(""))], { w: GG, mx: 0 })]) : c;
 })) });
@@ -162,11 +162,11 @@ const hacerTablero = (lista, nFilas, prefijo, ayuda) => {
   for (let f = 0; f < nFilas; f++) {
     const hijos = [];
     [0, 1, 2].forEach((c) => {
-      hijos.push(celda([p(t(lista[c * nFilas + f], { size: 14 }), { linea: 150 })], { w: GP, borders: punteado, mx: 0 }));
+      hijos.push(celda([p(t(lista[c * nFilas + f], { size: 16 }), { linea: 150 })], { w: GP, borders: punteado, mx: 0 }));
       hijos.push(cajita()); hijos.push(cajita());
       if (c < 2) hijos.push(celda([p(t(""))], { w: GG, mx: 0 }));
     });
-    filas.push(new TableRow({ height: { value: 150, rule: HeightRule.ATLEAST }, children: hijos }));
+    filas.push(new TableRow({ height: { value: 200, rule: HeightRule.ATLEAST }, children: hijos }));
   }
   const dentro = [];
   if (ayuda) dentro.push(p(t(ayuda, { size: 16, color: MUTED }), { after: 70 }));
@@ -174,8 +174,7 @@ const hacerTablero = (lista, nFilas, prefijo, ayuda) => {
   return tabla([ new TableRow({ children: [celda(dentro, { w: CW, borders: fino(), mx: 130 })] }) ], [CW]);
 };
 
-const tableroExterior = hacerTablero(partes, 14, "p",
-  "Marcar Sí si la parte ingresa con daño, No si está conforme. El detalle del daño va en observaciones.");
+const tableroExterior = hacerTablero(partes, 14, "p", null);
 
 const interior = [
   "Tablero / consola",
@@ -200,12 +199,22 @@ const interior = [
 const tableroInterior = hacerTablero(interior, 6, "i", null);
 
 /* ---------- observaciones, nota y firmas ---------- */
-const lineaObs = () => new TableRow({ height: { value: 240, rule: HeightRule.EXACT },
-  children: [celda([p(t("", { size: 22 }))], { w: CW - 300,
-    borders: { ...sinBorde, bottom: { style: BorderStyle.SINGLE, size: 4, color: RULE } }, mx: 30 })] });
-const observaciones = tabla([ new TableRow({ children: [celda(
-  [tabla([lineaObs()], [CW - 300])],
-  { w: CW, borders: fino(), mx: 150 })]})], [CW]);
+const OW = [420, CW - 420];
+const FINA = { style: BorderStyle.SINGLE, size: 4, color: RULE };
+const bordeObs = (primera, izq) => ({
+  top: primera ? FINA : NADA, bottom: FINA,
+  left: izq ? FINA : NADA, right: izq ? NADA : FINA,
+});
+const lineaObs = (n, primera) => new TableRow({
+  height: { value: 480, rule: HeightRule.ATLEAST },
+  children: [
+    celda([p(t(n + ".", { size: 14, color: MUTED }))],
+      { w: OW[0], valign: VerticalAlign.BOTTOM, mx: 70, borders: bordeObs(primera, true) }),
+    celda([p(t("", { size: 16 }))],
+      { w: OW[1], valign: VerticalAlign.BOTTOM, mx: 150, borders: bordeObs(primera, false) }),
+  ]});
+const observaciones = tabla(
+  [lineaObs(1, true), lineaObs(2, false), lineaObs(3, false), lineaObs(4, false)], OW);
 
 const legal = new Paragraph({ spacing: { before: 0, after: 0 }, children: [
   t("El cliente declara que los datos y el estado de las partes consignados en esta hoja corresponden al vehículo al momento de su ingreso. ABARCA no se responsabiliza por dinero, documentos u objetos de valor dejados en el interior del vehículo.",
@@ -235,7 +244,7 @@ const doc = new Document({
       barra("DATOS DEL VEHÍCULO", AlignmentType.CENTER), hueco(110), vehiculo, hueco(50),
       barra("PARTES DAÑADAS — EXTERIOR", AlignmentType.LEFT), hueco(30), tableroExterior, hueco(60),
       barra("PARTES DAÑADAS — INTERIOR", AlignmentType.LEFT), hueco(30), tableroInterior, hueco(30),
-      barra("OBSERVACIONES / TRABAJO SOLICITADO", AlignmentType.LEFT), hueco(30), observaciones,
+      barra("OBSERVACIONES / TRABAJO SOLICITADO", AlignmentType.LEFT), hueco(30), observaciones, hueco(60),
       legal, firmas,
     ],
   }],
