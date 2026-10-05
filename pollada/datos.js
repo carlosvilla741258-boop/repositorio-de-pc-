@@ -75,3 +75,5 @@ module.exports = {
     "Tachados en el cuaderno (no se cuentan): Jhon Huaytalla (hoja 1, ya está en hoja 2), Arnol (hoja 1, ya está en POS), Vanesa (hoja 3, ya está en hoja 1), Luis Eco (20 yape) y una línea de 200 yape (“Huaychertey”?).",
   ],
 };
+// Montos reales del tablero (cuadre hecho por los organizadores).
+module.exports.real = { efectivo: 1294, pos: 880, yape: 1046, deuda: 1520 };

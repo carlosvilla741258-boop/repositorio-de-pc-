@@ -37,17 +37,18 @@ const tE=sum(ef),tY=sum(ya),tP=sum(po),tF=sum(fa);
 const cobrado=tE+tY+tP+sm,total=cobrado+tF;
 const platos=d.pos.reduce((s,r)=>s+r[1],0)+d.resto.reduce((s,r)=>s+r[1],0);
 
-const rc=[5000,4026];
-const res=(a,b,o={})=>new TableRow({children:[cell(a,rc[0],{bold:o.bold,fill:o.fill}),cell(b,rc[1],{bold:o.bold,fill:o.fill,align:AlignmentType.RIGHT})]});
+const R=d.real,rCob=R.efectivo+R.pos+R.yape,rTot=rCob+R.deuda;
+const rc=[4400,2313,2313];
+const res=(a,b,c,o={})=>new TableRow({children:[cell(a,rc[0],{bold:o.bold,fill:o.fill,color:o.color}),cell(b,rc[1],{bold:o.bold,fill:o.fill,color:o.color,align:AlignmentType.RIGHT}),cell(c,rc[2],{bold:o.bold,fill:o.fill||"FAFAFA",color:o.color||"777777",align:AlignmentType.RIGHT,size:18})]});
 const resumen=new Table({width:{size:W,type:WidthType.DXA},columnWidths:rc,rows:[
-  res("Efectivo",S(tE)),res("Yape",S(tY)),res("POS",S(tP)),
-  res("Pagos sin método anotado (Cosme Christian 20, Yimi mecánico 20)",S(sm)),
-  res("TOTAL YA COBRADO",S(cobrado),{bold:true,fill:"E3F2E5"}),
-  res("FALTAN PAGAR",S(tF),{bold:true,fill:"FCE4E4"}),
-  res("TOTAL ANOTADO (cobrado + por cobrar)",S(total),{bold:true,fill:"E8E8E8"}),
-  res("Platos anotados",platos+" platos"),
-  res("Meta: 250 platos × S/ 20",S(5000)),
-  res("Diferencia contra la meta",S(5000-total)+"  ("+(250-platos)+" platos)",{bold:true}),
+  res("Concepto","Monto real","Suma de las listas",{bold:true,fill:"424242",color:"FFFFFF"}),
+  res("Efectivo real",S(R.efectivo),S(tE)),res("POS",S(R.pos),S(tP)),res("Yape",S(R.yape),S(tY)),
+  res("Pagos sin método anotado","—",S(sm)),
+  res("TOTAL YA COBRADO",S(rCob),S(cobrado),{bold:true,fill:"E3F2E5"}),
+  res("DEUDA (faltan pagar)",S(R.deuda),S(tF),{bold:true,fill:"FCE4E4"}),
+  res("SUB TOTAL REAL",S(rTot),S(total),{bold:true,fill:"FFF3C4"}),
+  res("Meta: 250 platos × S/ 20",S(5000),S(5000)),
+  res("Diferencia contra la meta",S(5000-rTot)+" ("+(250-rTot/20)+" platos)",S(5000-total),{bold:true}),
 ]});
 const P=(t,o={})=>new Paragraph({spacing:{after:80},children:[new TextRun({text:t,size:o.size||20,bold:o.bold,italics:o.it,color:o.color})]});
 
@@ -59,7 +60,7 @@ const doc=new Document({styles:{default:{document:{run:{font:"Arial"}}}},section
     new Paragraph({heading:HeadingLevel.HEADING_1,spacing:{after:120},children:[new TextRun("Resumen")]}),
     resumen,
     P(""),
-    P("Nota: la hoja POS del cuaderno dice total S/ 880, pero sumando fila por fila da S/ "+tP+". Puede ser la corrección que se ve en la fila de Angélica; conviene comparar con el reporte del POS.",{size:18,it:true}),
+    P("“Monto real” es el cuadre final de la pollada. “Suma de las listas” es lo que da sumar los nombres anotados en el cuaderno (tablas de abajo); la diferencia indica pagos que no quedaron anotados con nombre o con el método correcto.",{size:18,it:true}),
     ...tabla("EFECTIVO","2E7D32",ef),
     ...tabla("YAPE","6A1B9A",ya),
     ...tabla("POS (tarjeta)","1565C0",po),
